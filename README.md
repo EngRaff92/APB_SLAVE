@@ -30,7 +30,7 @@
 
 ### Using PeakRdl from Python Library
 
-### Using Regtool from the OpenTitan RISCV from the HJSON 
+### Using python to generate parameters from JSON and RDL files 
 
 
 
