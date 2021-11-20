@@ -1,0 +1,7 @@
+read_verilog -DICE40 -noautowire -sv apb_slave_regsiter_tb_top.sv
+proc
+opt -full
+alumacc
+share -aggressive
+opt -full
+synth_ice40 -abc2 -top top -blif top.blif -json top.json
