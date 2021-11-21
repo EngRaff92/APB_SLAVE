@@ -106,4 +106,4 @@ if __name__ == "__main__":
         sys.exit(1)
 
     # Dump the register model to a JSON file
-    convert_to_json(rdlc, root, "./output_all/reg_out.json")
+    convert_to_json(rdlc, root, "./output_all/apb_reg.json")

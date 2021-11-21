@@ -52,7 +52,7 @@ memory_type  = "memory"
 # Use to open the JSON file and get the dictionary back
 def parse_json() -> dict:
     data = {}
-    with open("./output_all/reg_out.json", "r") as f:
+    with open("./output_all/apb_reg.json", "r") as f:
         data = j.load(f)
     f.close()
     return data
@@ -87,11 +87,11 @@ def gen_lists_and_csv(data):
     res = dict(zip(name, address))
     res2 = dict(zip(name, t_reg))
     df = pd.DataFrame(data={"TYPE": t_reg, "NAME": name, "ADDRESS": address})
-    with open ('./output_all/file.csv', 'x') as f:
-        df.to_csv("./output_all/file.csv", sep=',',index=False)
+    with open ('./output_all/apb_reg.csv', 'x') as f:
+        df.to_csv("./output_all/apb_reg.csv", sep=',',index=False)
     f.close()
     t = Template(temp.param_template+'\n')
-    with open('./output_all/reg_param.svh', 'x') as f:
+    with open('./output_all/apb_reg_param.svh', 'x') as f:
         ## Fristly write the header
         f.write(temp.header)
         for x in res.keys():
