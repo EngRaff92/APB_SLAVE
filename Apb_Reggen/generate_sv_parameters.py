@@ -1,3 +1,5 @@
+#!/opt/homebrew/bin/python3.9
+
 ## 
 ## Icebreaker and IceSugar RSMB5 project - RV32I for Lattice iCE40
 ## With complete open-source toolchain flow using:
@@ -39,44 +41,72 @@ import pandas as pd
 import sys
 import template as temp
 from string import Template
+
 ############################################################################
 ############################################################################
 #### Classes and functions
 ############################################################################
+regfile_type = "regfile"
+memory_type  = "memory"
 
-def parse_json():
-    global data
-    with open("./out.json", "r") as f:
+# Use to open the JSON file and get the dictionary back
+def parse_json() -> dict:
+    data = {}
+    with open("./output_all/reg_out.json", "r") as f:
         data = j.load(f)
     f.close()
+    return data
 
-def gen_lists_and_csv():
+def gen_lists_and_csv(data):
     name    = []
     t_reg   = []
     address = []
     sub_data = data['children']
+    res = {}
+    res2 = {}
+    global is_regfile 
+    global is_memory
     for reg in sub_data:
+        # Check the register aggregation type
+        if reg['type'] == regfile_type:
+            is_regfile = True
+            is_memory  = False
+        elif reg['type'] == memory_type:
+            is_regfile = False
+            is_memory  = True
+        # according to the result we create the parameters
         t_reg.append(reg['type'])
         name.append(reg['inst_name'])
-        address.append(reg['addr_offset'])
+        address.append(reg['absolute_adress'])
         for x in reg['children']:
-                t_reg.append(x['type'])
-                name.append(x['inst_name'])
-                address.append(reg['addr_offset'])
+            t_reg.append(x['type'])
+            name.append(x['inst_name'])
+            if (x['type'] != "field"):
+                address.append(x['address_offset'])
+    ## Generate the final dicationary
+    res = dict(zip(name, address))
+    res2 = dict(zip(name, t_reg))
     df = pd.DataFrame(data={"TYPE": t_reg, "NAME": name, "ADDRESS": address})
-    with open ('./file.csv', 'x') as f:
-        df.to_csv("./file.csv", sep=',',index=False)
+    with open ('./output_all/file.csv', 'x') as f:
+        df.to_csv("./output_all/file.csv", sep=',',index=False)
     f.close()
     t = Template(temp.param_template+'\n')
-    with open('./reg_param.svh', 'x') as f:
-        for x in name:
-            a=t.substitute({'name' : x, 'value' : 0})
+    with open('./output_all/reg_param.svh', 'x') as f:
+        ## Fristly write the header
+        f.write(temp.header)
+        for x in res.keys():
+            if res2[x] == regfile_type:
+                a=t.substitute({'name' : "{}_{}".format(res2[x],x), 'value' : res[x].replace('0x',"32'h")})
+            elif res2[x] == memory_type:
+                a=t.substitute({'name' : "{}_{}_start".format(res2[x],x), 'value' : res[x].replace('0x',"32'h")})
+            else:
+                a=t.substitute({'name' : "register_{}".format(x), 'value' : res[x].replace('0x',"32'h")})
             f.write(a)
     f.close()
 
 def main():
-    parse_json()
-    gen_lists_and_csv()
+    data_f = parse_json()
+    gen_lists_and_csv(data_f)
 
 if __name__ == '__main__':
 	main()

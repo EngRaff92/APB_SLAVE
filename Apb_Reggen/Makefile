@@ -35,19 +35,28 @@
 ###############################################################################
 # Local Variable
 ###############################################################################
-tests_dir       = . # dir where tests are located, default is current directory
-test_name       =   # name of test
-all_golden      =   # clear golden dir and make all outputs golden
-clear_golden    =   # clear golden dir contents
-sv_golden       =   # make verilog golden
-sv_golden       =   # make systemverilog golden
-uvm_golden      =   # make uvmregs golden
-rdl_golden      =   # make rdl golden
-js_golden       =   # make jspec golden
-reglist_golden  =   # make reglist golden 
-xml_golden      =   # make xml golden
-OPTIND          = 1 # Reset in case getopts has been used previously in the shell.
+current_dir =  $(shell pwd)
+output_dir 	= $(current_dir)/output_all
+rdl_file 	 = $(current_dir)/apb_register_descriptor.rdl
 
 ###############################################################################
 # Local Rules
 ###############################################################################
+.PHONY: clean rdb_gen test_variable
+
+clean:
+	@rm -rf $(output_dir)
+
+test_variable:
+	@test rdl_file
+
+check_and_remove:
+	@[ -f $(output_dir)file.csv ] && rm $(output_dir)file.csv
+	@[ -f $(output_dir)reg_param.svh ] && rm $(output_dir)reg_param.svh
+	
+rdb_gen: test_variable
+	@if [ ! -d $(output_dir) ]; then mkdir -p $(output_dir); fi
+	@$(current_dir)/generate_uvm_regs.py $(rdl_file)
+	@$(current_dir)/json_exporter.py $(rdl_file)
+	@$(current_dir)/generate_sv_parameters.py
+	@$(info Register Data Base generation DONE")

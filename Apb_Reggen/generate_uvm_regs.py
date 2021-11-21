@@ -1,14 +1,22 @@
+#!/opt/homebrew/bin/python3.9
+
 import sys
 from systemrdl import RDLCompiler, RDLCompileError
 from peakrdl.uvm import UVMExporter
 
-rdlc = RDLCompiler()
+def export_uvm(obj):
+    exporter = UVMExporter()
+    exporter.export(root, "./output_all/test.sv")
 
-try:
-    rdlc.compile_file("/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Apb_Reggen/basic.rdl")
-    root = rdlc.elaborate()
-except RDLCompileError:
-    sys.exit(1)
-
-exporter = UVMExporter()
-exporter.export(root, "test.sv")
+if __name__ == "__main__":
+    import sys
+    # Compile and elaborate files provided from the command line
+    input_files = sys.argv[1:]
+    rdlc = RDLCompiler()
+    try:
+        for input_file in input_files:
+            rdlc.compile_file(input_file)
+        root = rdlc.elaborate()
+        export_uvm(root)
+    except RDLCompileError:
+        sys.exit(1)

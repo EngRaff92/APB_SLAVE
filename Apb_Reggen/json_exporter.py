@@ -1,3 +1,5 @@
+#! /opt/homebrew/bin/python3.9
+
 from typing import Union
 import json
 
@@ -17,19 +19,11 @@ def convert_field(rdlc: RDLCompiler, obj: node.FieldNode) -> dict:
 
 
 def convert_reg(rdlc: RDLCompiler, obj: node.RegNode) -> dict:
-    if obj.is_array:
-        # Use the RDL Compiler message system to print an error
-        # fatal() raises RDLCompileError
-        rdlc.msg.fatal(
-            "JSON export does not support arrays",
-            obj.inst.inst_src_ref
-        )
-
     # Convert information about the register
     json_obj = dict()
     json_obj['type'] = 'reg'
     json_obj['inst_name'] = obj.inst_name
-    json_obj['addr_offset'] = obj.address_offset
+    json_obj['address_offset'] = hex(obj.raw_absolute_address)
 
     # Iterate over all the fields in this reg and convert them
     json_obj['children'] = []
@@ -39,34 +33,52 @@ def convert_reg(rdlc: RDLCompiler, obj: node.RegNode) -> dict:
 
     return json_obj
 
+def convert_reg_in_memory(rdlc: RDLCompiler, obj: node.RegNode, absolute_adress, position) -> dict:
+    # Convert information about the register
+    json_obj = dict()
+    json_obj['type'] = 'reg'
+    json_obj['inst_name'] = obj.inst_name + "_{}".format(position)
+    json_obj['address_offset'] = hex(absolute_adress + (position* int(obj.total_size/8)))
+    json_obj['size'] = obj.total_size
 
-def convert_addrmap_or_regfile(rdlc: RDLCompiler, obj: Union[node.AddrmapNode, node.RegfileNode]) -> dict:
-    if obj.is_array:
-        rdlc.msg.fatal(
-            "JSON export does not support arrays",
-            obj.inst.inst_src_ref
-        )
+    # Iterate over all the fields in this reg and convert them
+    json_obj['children'] = []
+    for field in obj.fields():
+        json_field = convert_field(rdlc, field)
+        json_obj['children'].append(json_field)
 
+    return json_obj
+
+def convert_addrmap_or_regfile(rdlc: RDLCompiler, obj: Union[node.AddrmapNode, node.RegfileNode, node.MemNode]) -> dict:
     json_obj = dict()
     if isinstance(obj, node.AddrmapNode):
         json_obj['type'] = 'addrmap'
+        json_obj['absolute_adress'] = hex(obj.raw_absolute_address)
     elif isinstance(obj, node.RegfileNode):
         json_obj['type'] = 'regfile'
+        json_obj['absolute_adress'] = hex(obj.raw_absolute_address)
+    elif isinstance(obj, node.MemNode):
+        json_obj['type'] = 'memory'
+        json_obj['absolute_adress'] = hex(obj.raw_absolute_address)
     else:
         raise RuntimeError
 
     json_obj['inst_name'] = obj.inst_name
-    json_obj['addr_offset'] = obj.address_offset
 
     json_obj['children'] = []
     for child in obj.children():
-        if isinstance(child, (node.AddrmapNode, node.RegfileNode)):
+        if isinstance(child, (node.AddrmapNode, node.RegfileNode, node.MemNode)):
             json_child = convert_addrmap_or_regfile(rdlc, child)
+            json_obj['children'].append(json_child)
         elif isinstance(child, node.RegNode):
-            json_child = convert_reg(rdlc, child)
-
-        json_obj['children'].append(json_child)
-
+            if isinstance(obj, node.MemNode):
+                for el in range(len(child.array_dimensions)):
+                    for index in range(child.array_dimensions[el]):
+                        json_child = convert_reg_in_memory(rdlc, child, obj.address_offset,index)
+                        json_obj['children'].append(json_child)
+            else:
+                json_child = convert_reg(rdlc, child)
+                json_obj['children'].append(json_child)
     return json_obj
 
 
@@ -94,4 +106,4 @@ if __name__ == "__main__":
         sys.exit(1)
 
     # Dump the register model to a JSON file
-    convert_to_json(rdlc, root, "out.json")
+    convert_to_json(rdlc, root, "./output_all/reg_out.json")
