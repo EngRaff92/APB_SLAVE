@@ -197,7 +197,7 @@
         },
         {
             "type": "memory",
-            "absolute_adress": "0x10000",
+            "memory_adress_start": "0x10000",
             "inst_name": "xxx",
             "children": [
                 {
@@ -328,7 +328,8 @@
                         }
                     ]
                 }
-            ]
+            ],
+            "memory_adress_end": "0x1001c"
         }
     ]
 }

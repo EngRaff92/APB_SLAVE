@@ -59,7 +59,7 @@ def convert_addrmap_or_regfile(rdlc: RDLCompiler, obj: Union[node.AddrmapNode, n
         json_obj['absolute_adress'] = hex(obj.raw_absolute_address)
     elif isinstance(obj, node.MemNode):
         json_obj['type'] = 'memory'
-        json_obj['absolute_adress'] = hex(obj.raw_absolute_address)
+        json_obj['memory_adress_start'] = hex(obj.raw_absolute_address)
     else:
         raise RuntimeError
 
@@ -76,6 +76,7 @@ def convert_addrmap_or_regfile(rdlc: RDLCompiler, obj: Union[node.AddrmapNode, n
                     for index in range(child.array_dimensions[el]):
                         json_child = convert_reg_in_memory(rdlc, child, obj.address_offset,index)
                         json_obj['children'].append(json_child)
+                json_obj['memory_adress_end'] = hex(obj.raw_absolute_address + ((child.array_dimensions[0]-1)* int(child.total_size/8)))
             else:
                 json_child = convert_reg(rdlc, child)
                 json_obj['children'].append(json_child)

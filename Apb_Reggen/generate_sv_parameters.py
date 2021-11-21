@@ -76,13 +76,22 @@ def gen_lists_and_csv(data):
             is_memory  = True
         # according to the result we create the parameters
         t_reg.append(reg['type'])
-        name.append(reg['inst_name'])
-        address.append(reg['absolute_adress'])
+        ## check if Memory so that we can print the start and end 
+        if ((not is_regfile) & is_memory):
+            address.append(reg['memory_adress_start'])
+            name.append("memory_adress_start")
+        else:
+            address.append(reg['absolute_adress'])
+            name.append(reg['inst_name'])
         for x in reg['children']:
             t_reg.append(x['type'])
             name.append(x['inst_name'])
             if (x['type'] != "field"):
                 address.append(x['address_offset'])
+        if ((not is_regfile) & is_memory):
+            t_reg.append(memory_type)
+            name.append("memory_adress_end")
+            address.append(reg['memory_adress_end'])
     ## Generate the final dicationary
     res = dict(zip(name, address))
     res2 = dict(zip(name, t_reg))
@@ -98,7 +107,7 @@ def gen_lists_and_csv(data):
             if res2[x] == regfile_type:
                 a=t.substitute({'name' : "{}_{}".format(res2[x],x), 'value' : res[x].replace('0x',"32'h")})
             elif res2[x] == memory_type:
-                a=t.substitute({'name' : "{}_{}_start".format(res2[x],x), 'value' : res[x].replace('0x',"32'h")})
+                a=t.substitute({'name' : "{}".format(x), 'value' : res[x].replace('0x',"32'h")})
             else:
                 a=t.substitute({'name' : "register_{}".format(x), 'value' : res[x].replace('0x',"32'h")})
             f.write(a)

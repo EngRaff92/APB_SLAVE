@@ -7,7 +7,7 @@ regfile,bar,0x1000
 reg,r1,0x1000
 regfile,bar2,0x8000
 reg,r1,0x8000
-memory,xxx,0x10000
+memory,memory_adress_start,0x10000
 reg,r1_0,0x10000
 reg,r1_1,0x10004
 reg,r1_2,0x10008
@@ -16,3 +16,4 @@ reg,r1_4,0x10010
 reg,r1_5,0x10014
 reg,r1_6,0x10018
 reg,r1_7,0x1001c
+memory,memory_adress_end,0x1001c
