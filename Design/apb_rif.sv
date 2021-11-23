@@ -117,8 +117,8 @@ module apb_rif #(
       end 
       else begin: reg_decoder
       	case(reg_dec)
-          	// Write modifier register
-        	'd0:	begin 
+          // Wr	ite modifier register
+		    	'd0:	begin 
 			            if(wr_rq) begin
 			            	Write_Reg_En 	<= rif_wdata;
 			            	error_handler 	<= 1'b0;
@@ -127,80 +127,80 @@ module apb_rif #(
 			              	rif_rdata    	<= Write_Reg_En;
 			              	error_handler 	<= 1'b0;
 			            end
-          			end 
-			// Status Register
-			'd1:  	begin 
-						if(rd_rq) begin	
-							rif_rdata  		<= Status_1; 
-							error_handler 	<= 1'b0;
-						end
-						else if(wr_rq) begin
-							error_handler 	<= 1'b1;
-							rif_rdata 		<= 'h0;
-						end		
-					end
-			'd2:  	begin 
-						if(rd_rq) begin
-							error_handler 	<= 1'b0;
-							rif_rdata  		<= Status_2; 
-						end
-						else if(wr_rq) begin
-							error_handler 	<= 1'b1;
-							rif_rdata 		<= 'h0;
-						end							
-					end
-			'd3:  	begin 
-						if(rd_rq) begin
-							rif_rdata  		<= Status_3;
-							error_handler 	<= 1'b0;
-						end	 
-						else if(wr_rq) begin
-							error_handler 	<= 1'b1;
-							rif_rdata 		<= 'h0;
-						end						
-					end
-			// Data Register
-			'd4:  	begin 
-						if(wr_rq & Write_Reg_En[0]) begin
-							Data_1 			<= rif_wdata;
-							error_handler 	<= 1'b0;
-						end
-						else if(wr_rq & ~Write_Reg_En[0]) begin
-						  	error_handler <= 1'b1;
-						end
-						else if(rd_rq) begin
-						  	rif_rdata 		<= Data_1; 
-						  	error_handler 	<= 1'b0;
-						end
-				    	end
-			'd5:  	begin 
-				        if(wr_rq & Write_Reg_En[1]) begin
-				          	Data_2 			<= rif_wdata;
-				          	error_handler 	<= 1'b0;
-				        end
-				        else if(wr_rq & ~Write_Reg_En[1]) begin
-				          	error_handler <= 1'b1;
-				        end
-				        else if(rd_rq) begin
-				          	rif_rdata 		<= Data_2; 
-				          	error_handler 	<= 1'b0;
-				        end
-			    	end
-			'd6:  	begin 
-				    	if(wr_rq & Write_Reg_En[2]) begin
-				          	Data_3 			<= rif_wdata;
-				          	error_handler 	<= 1'b0;
-				        end
-				        else if(wr_rq & ~Write_Reg_En[2]) begin
-				          	error_handler <= 1'b1;
-				        end
-				        else if(rd_rq) begin
-				          	rif_rdata 		<= Data_3; 
-				          	error_handler 	<= 1'b0;
-				        end
-			    	end
-			// Registers not mapped
-			default:  begin error_handler <= 1'b1; end
+		      			end 
+					// Status Register
+					'd1:  	begin 
+								if(rd_rq) begin	
+									rif_rdata  		<= Status_1; 
+									error_handler 	<= 1'b0;
+								end
+								else if(wr_rq) begin
+									error_handler 	<= 1'b1;
+									rif_rdata 		<= 'h0;
+								end		
+							end
+					'd2:  	begin 
+								if(rd_rq) begin
+									error_handler 	<= 1'b0;
+									rif_rdata  		<= Status_2; 
+								end
+								else if(wr_rq) begin
+									error_handler 	<= 1'b1;
+									rif_rdata 		<= 'h0;
+								end							
+							end
+					'd3:  	begin 
+								if(rd_rq) begin
+									rif_rdata  		<= Status_3;
+									error_handler 	<= 1'b0;
+								end	 
+								else if(wr_rq) begin
+									error_handler 	<= 1'b1;
+									rif_rdata 		<= 'h0;
+								end						
+							end
+					// Data Register
+					'd4:  	begin 
+								if(wr_rq & Write_Reg_En[0]) begin
+									Data_1 			<= rif_wdata;
+									error_handler 	<= 1'b0;
+								end
+								else if(wr_rq & ~Write_Reg_En[0]) begin
+								  	error_handler <= 1'b1;
+								end
+								else if(rd_rq) begin
+								  	rif_rdata 		<= Data_1; 
+								  	error_handler 	<= 1'b0;
+								end
+						    	end
+					'd5:  	begin 
+						        if(wr_rq & Write_Reg_En[1]) begin
+						          	Data_2 			<= rif_wdata;
+						          	error_handler 	<= 1'b0;
+						        end
+						        else if(wr_rq & ~Write_Reg_En[1]) begin
+						          	error_handler <= 1'b1;
+						        end
+						        else if(rd_rq) begin
+						          	rif_rdata 		<= Data_2; 
+						          	error_handler 	<= 1'b0;
+						        end
+					    	end
+					'd6:  	begin 
+						    	if(wr_rq & Write_Reg_En[2]) begin
+						          	Data_3 			<= rif_wdata;
+						          	error_handler 	<= 1'b0;
+						        end
+						        else if(wr_rq & ~Write_Reg_En[2]) begin
+						          	error_handler <= 1'b1;
+						        end
+						        else if(rd_rq) begin
+						          	rif_rdata 		<= Data_3; 
+						          	error_handler 	<= 1'b0;
+						        end
+					    	end
+					// Registers not mapped
+					default:  begin error_handler <= 1'b1; end
         endcase // reg_dec
       end
     end

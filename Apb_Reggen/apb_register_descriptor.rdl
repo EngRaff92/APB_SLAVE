@@ -1,49 +1,40 @@
-addrmap basic {
+// Address Map
+addrmap apb_addr_map {
+    name = "APB SLave address MAP";
+    desc = "Register description of APB slave with 32 bit bandwith";
+    // List of register
     regfile {
-        reg reg_t{
-            field {sw=rw; hw=r;} f1[15:0] = 1234;
-            field f2_t {sw=rw; hw=r;};
-            f2_t f2[16:16] = 0;
-            f2_t f3[17:17] = 0;
-            field {
-                sw=rw; hw=r;
-                hdl_path_slice = '{"f4"};
-                hdl_path_gate_slice = '{"f4_31_gate", "f4_30_gate"};
-            } f4[31:30] = 0;
-            field {
-                sw=rw; hw=r;
-                hdl_path_slice = '{"f5_29", "f5_28"};
-                hdl_path_gate_slice = '{"f5_gate"};
-            } f5[29:28] = 0;
+        reg data_t{
+            desc = "Basic 32 bit data register with RW policy";
+            field {sw=rw; hw=r;} dt[31:0] = 0;
         };
-        reg_t r1 @ 0x0;
-        reg_t r2 @ 0x4;
-        reg_t r3 @ 0x8;
+        data_t data1 @ 0x0;
+        data_t data2 @ 0x4;
+        data_t data3 @ 0x8;
+        
+        reg wen_t{
+            desc = "These bits enable and disable a write into the data register (0) disable (1) enabled";
+            field {sw=rw; hw=r;} data1_wren[0:0] = 0;
+            field {sw=rw; hw=r;} data2_wren[1:1] = 0;
+            field {sw=rw; hw=r;} data3_wren[2:2] = 0;
+        };
+        wen_t write_enable @ 0xC;
 
-        r3.f1->sw=w;
-        r3.f1->reset=200;
-    } foo @ 0x0;
+        reg status_t{
+            desc = "These bits are used to store the result of a specific TRX to the data register if 1 an error occured";
+            field {sw=r; hw=w;} status[0:0] = 0;
+        };
+        status_t data_status_1 @ 0x10;
+        status_t data_status_2 @ 0x14;
+        status_t data_status_3 @ 0x18;
+    } apb_rif @ 0x0;
 
-    regfile bar_t {
-        reg {
-            field {sw=rw; hw=r;} f[15:0] = 1234;
-            hdl_path = "r1";
-            hdl_path_gate = "r1_gate";
-        } r1[4] @ 0x0 += 4;
-        hdl_path = "bar";
-        hdl_path_gate = "bar_gate";
-    };
-    
-    bar_t bar[4][3] @ 0x1000 += 0x100;
-    bar_t bar2 @ 0x8000;
-
-    bar2.r1.f->sw=w;
-    bar2.r1.f->reset=200;
-
+    // Memory RW single port
     external mem {
+        desc = "General RW single port ROM";
         reg {
-            field {sw=rw; hw=r;} f[15:0] = 1234;
-        } r1[8] @ 0x0 += 4;
+            field {sw=rw; hw=r;} dm[31:0] = 0;
+        } r1[256] @ 0x0 += 4;
         mementries = 0x100;
-    } xxx @ 0x10000;
+    } apb_mem @ 0x100;
 };

@@ -8,9 +8,9 @@
     <dt>Absolute Address:</dt><dd id="_AbsAddr" class="address"></dd>
     <dt>Base Offset:</dt><dd class="address">0x0</dd>
     <dt>Size:</dt><dd class="address">0x4</dd>
-    <dt>Array Dimensions:</dt><dd>[8]</dd>
+    <dt>Array Dimensions:</dt><dd>[256]</dd>
     <dt>Array Stride:</dt><dd>+0x4</dd>
-    <dt>Total Size:</dt><dd class="address">0x20</dd>
+    <dt>Total Size:</dt><dd class="address">0x400</dd>
     
 </dl>
 
@@ -25,33 +25,24 @@
         <th>Name</th>
         <th></th>
     </tr>
-    <tr class="reserved-field">
-    <td>[31:16]</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td></td>
-    <td>-</td>
-    <td></td>
-</tr>
-    <tr id="f">
-        <td>[15:0]</td>
-        <td>f</td>
+    <tr id="dm">
+        <td>[31:0]</td>
+        <td>dm</td>
         <td>
             <span title='Readable and Writable'>rw</span></td>
-        <td>0x4d2
+        <td>0x0
         </td>
         <td>
-            <input id="_FieldValueTesterf" class="field-value-tester"
+            <input id="_FieldValueTesterdm" class="field-value-tester"
                 type="text" autocomplete="off"
-                data-name="f" oninput="onDecodedFieldInput(this)"/>
+                data-name="dm" oninput="onDecodedFieldInput(this)"/>
         </td>
         <td>-</td>
         <td>
-            <button type="button" id="_RadixButtonf" class="radix-button"
+            <button type="button" id="_RadixButtondm" class="radix-button"
                 title="Switch radix" aria-label="Switch radix"
-                data-name="f" onclick="onRadixSwitch(this)">H</button>
-            <a class="headerlink" href="#f" title="Permalink to this row"></a>
+                data-name="dm" onclick="onRadixSwitch(this)">H</button>
+            <a class="headerlink" href="#dm" title="Permalink to this row"></a>
         </td>
     </tr>
 </table>

@@ -4,193 +4,128 @@ package apb_reg_pkg;
     `include "uvm_macros.svh"
     import uvm_pkg::*;
     
-    // Reg - basic::foo::reg_t
-    class basic__foo__reg_t extends uvm_reg;
-        rand uvm_reg_field f1;
-        rand uvm_reg_field f2;
-        rand uvm_reg_field f3;
-        rand uvm_reg_field f5;
-        rand uvm_reg_field f4;
+    // Reg - apb_addr_map::apb_rif::data_t
+    class apb_addr_map__apb_rif__data_t extends uvm_reg;
+        rand uvm_reg_field dt;
 
-        function new(string name = "basic__foo__reg_t");
+        function new(string name = "apb_addr_map__apb_rif__data_t");
             super.new(name, 32, UVM_NO_COVERAGE);
         endfunction : new
 
         virtual function void build();
-            this.f1 = new("f1");
-            this.f1.configure(this, 16, 0, "RW", 0, 'h4d2, 1, 1, 0);
-            this.f2 = new("f2");
-            this.f2.configure(this, 1, 16, "RW", 0, 'h0, 1, 1, 0);
-            this.f3 = new("f3");
-            this.f3.configure(this, 1, 17, "RW", 0, 'h0, 1, 1, 0);
-            this.f5 = new("f5");
-            this.f5.configure(this, 2, 28, "RW", 0, 'h0, 1, 1, 0);
-            this.f4 = new("f4");
-            this.f4.configure(this, 2, 30, "RW", 0, 'h0, 1, 1, 0);
+            this.dt = new("dt");
+            this.dt.configure(this, 32, 0, "RW", 0, 'h0, 1, 1, 0);
         endfunction : build
-    endclass : basic__foo__reg_t
+    endclass : apb_addr_map__apb_rif__data_t
 
-    // Reg - basic::foo::reg_t_f1_10de76a8
-    class basic__foo__reg_t_f1_10de76a8 extends uvm_reg;
-        rand uvm_reg_field f1;
-        rand uvm_reg_field f2;
-        rand uvm_reg_field f3;
-        rand uvm_reg_field f5;
-        rand uvm_reg_field f4;
+    // Reg - apb_addr_map::apb_rif::wen_t
+    class apb_addr_map__apb_rif__wen_t extends uvm_reg;
+        rand uvm_reg_field data1_wren;
+        rand uvm_reg_field data2_wren;
+        rand uvm_reg_field data3_wren;
 
-        function new(string name = "basic__foo__reg_t_f1_10de76a8");
+        function new(string name = "apb_addr_map__apb_rif__wen_t");
             super.new(name, 32, UVM_NO_COVERAGE);
         endfunction : new
 
         virtual function void build();
-            this.f1 = new("f1");
-            this.f1.configure(this, 16, 0, "WO", 0, 'hc8, 1, 1, 0);
-            this.f2 = new("f2");
-            this.f2.configure(this, 1, 16, "RW", 0, 'h0, 1, 1, 0);
-            this.f3 = new("f3");
-            this.f3.configure(this, 1, 17, "RW", 0, 'h0, 1, 1, 0);
-            this.f5 = new("f5");
-            this.f5.configure(this, 2, 28, "RW", 0, 'h0, 1, 1, 0);
-            this.f4 = new("f4");
-            this.f4.configure(this, 2, 30, "RW", 0, 'h0, 1, 1, 0);
+            this.data1_wren = new("data1_wren");
+            this.data1_wren.configure(this, 1, 0, "RW", 0, 'h0, 1, 1, 0);
+            this.data2_wren = new("data2_wren");
+            this.data2_wren.configure(this, 1, 1, "RW", 0, 'h0, 1, 1, 0);
+            this.data3_wren = new("data3_wren");
+            this.data3_wren.configure(this, 1, 2, "RW", 0, 'h0, 1, 1, 0);
         endfunction : build
-    endclass : basic__foo__reg_t_f1_10de76a8
+    endclass : apb_addr_map__apb_rif__wen_t
 
-    // Regfile - basic::foo
-    class basic__foo extends uvm_reg_block;
-        rand basic__foo__reg_t r1;
-        rand basic__foo__reg_t r2;
-        rand basic__foo__reg_t_f1_10de76a8 r3;
+    // Reg - apb_addr_map::apb_rif::status_t
+    class apb_addr_map__apb_rif__status_t extends uvm_reg;
+        rand uvm_reg_field status;
 
-        function new(string name = "basic__foo");
+        function new(string name = "apb_addr_map__apb_rif__status_t");
+            super.new(name, 32, UVM_NO_COVERAGE);
+        endfunction : new
+
+        virtual function void build();
+            this.status = new("status");
+            this.status.configure(this, 1, 0, "RO", 1, 'h0, 1, 1, 0);
+        endfunction : build
+    endclass : apb_addr_map__apb_rif__status_t
+
+    // Regfile - apb_addr_map::apb_rif
+    class apb_addr_map__apb_rif extends uvm_reg_block;
+        rand apb_addr_map__apb_rif__data_t data1;
+        rand apb_addr_map__apb_rif__data_t data2;
+        rand apb_addr_map__apb_rif__data_t data3;
+        rand apb_addr_map__apb_rif__wen_t write_enable;
+        rand apb_addr_map__apb_rif__status_t data_status_1;
+        rand apb_addr_map__apb_rif__status_t data_status_2;
+        rand apb_addr_map__apb_rif__status_t data_status_3;
+
+        function new(string name = "apb_addr_map__apb_rif");
             super.new(name);
         endfunction : new
 
         virtual function void build();
             this.default_map = create_map("reg_map", 0, 4, UVM_NO_ENDIAN);
-            this.r1 = new("r1");
-            this.r1.configure(this);
-            r1.add_hdl_path_slice("f5_29", 29, 1);
-            r1.add_hdl_path_slice("f5_28", 28, 1);
-            r1.add_hdl_path_slice("f4", 30, 2);
-            r1.add_hdl_path_slice("f5_gate", 28, 2, 0, "GATE");
-            r1.add_hdl_path_slice("f4_31_gate", 31, 1, 0, "GATE");
-            r1.add_hdl_path_slice("f4_30_gate", 30, 1, 0, "GATE");
-            this.r1.build();
-            this.default_map.add_reg(this.r1, 'h0);
-            this.r2 = new("r2");
-            this.r2.configure(this);
-            r2.add_hdl_path_slice("f5_29", 29, 1);
-            r2.add_hdl_path_slice("f5_28", 28, 1);
-            r2.add_hdl_path_slice("f4", 30, 2);
-            r2.add_hdl_path_slice("f5_gate", 28, 2, 0, "GATE");
-            r2.add_hdl_path_slice("f4_31_gate", 31, 1, 0, "GATE");
-            r2.add_hdl_path_slice("f4_30_gate", 30, 1, 0, "GATE");
-            this.r2.build();
-            this.default_map.add_reg(this.r2, 'h4);
-            this.r3 = new("r3");
-            this.r3.configure(this);
-            r3.add_hdl_path_slice("f5_29", 29, 1);
-            r3.add_hdl_path_slice("f5_28", 28, 1);
-            r3.add_hdl_path_slice("f4", 30, 2);
-            r3.add_hdl_path_slice("f5_gate", 28, 2, 0, "GATE");
-            r3.add_hdl_path_slice("f4_31_gate", 31, 1, 0, "GATE");
-            r3.add_hdl_path_slice("f4_30_gate", 30, 1, 0, "GATE");
-            this.r3.build();
-            this.default_map.add_reg(this.r3, 'h8);
+            this.data1 = new("data1");
+            this.data1.configure(this);
+
+            this.data1.build();
+            this.default_map.add_reg(this.data1, 'h0);
+            this.data2 = new("data2");
+            this.data2.configure(this);
+
+            this.data2.build();
+            this.default_map.add_reg(this.data2, 'h4);
+            this.data3 = new("data3");
+            this.data3.configure(this);
+
+            this.data3.build();
+            this.default_map.add_reg(this.data3, 'h8);
+            this.write_enable = new("write_enable");
+            this.write_enable.configure(this);
+
+            this.write_enable.build();
+            this.default_map.add_reg(this.write_enable, 'hc);
+            this.data_status_1 = new("data_status_1");
+            this.data_status_1.configure(this);
+
+            this.data_status_1.build();
+            this.default_map.add_reg(this.data_status_1, 'h10);
+            this.data_status_2 = new("data_status_2");
+            this.data_status_2.configure(this);
+
+            this.data_status_2.build();
+            this.default_map.add_reg(this.data_status_2, 'h14);
+            this.data_status_3 = new("data_status_3");
+            this.data_status_3.configure(this);
+
+            this.data_status_3.build();
+            this.default_map.add_reg(this.data_status_3, 'h18);
         endfunction : build
-    endclass : basic__foo
+    endclass : apb_addr_map__apb_rif
 
-    // Reg - basic::bar_t::r1
-    class basic__bar_t__r1 extends uvm_reg;
-        rand uvm_reg_field f;
+    // Reg - apb_addr_map::apb_mem::r1
+    class apb_addr_map__apb_mem__r1 extends uvm_vreg;
+        rand uvm_vreg_field dm;
 
-        function new(string name = "basic__bar_t__r1");
-            super.new(name, 32, UVM_NO_COVERAGE);
-        endfunction : new
-
-        virtual function void build();
-            this.f = new("f");
-            this.f.configure(this, 16, 0, "RW", 0, 'h4d2, 1, 1, 0);
-        endfunction : build
-    endclass : basic__bar_t__r1
-
-    // Regfile - basic::bar_t
-    class basic__bar_t extends uvm_reg_block;
-        rand basic__bar_t__r1 r1[4];
-
-        function new(string name = "basic__bar_t");
-            super.new(name);
-        endfunction : new
-
-        virtual function void build();
-            this.default_map = create_map("reg_map", 0, 4, UVM_NO_ENDIAN);
-            foreach(this.r1[i0]) begin
-                this.r1[i0] = new($sformatf("r1[%0d]", i0));
-                this.r1[i0].configure(this);
-                r1[i0].add_hdl_path_slice("r1", -1, -1);
-                r1[i0].add_hdl_path_slice("r1_gate", -1, -1, 0, "GATE");
-                this.r1[i0].build();
-                this.default_map.add_reg(this.r1[i0], 'h0 + i0*'h4);
-            end
-        endfunction : build
-    endclass : basic__bar_t
-
-    // Reg - basic::bar_t_r1_27b54106::r1_f_955b7f88
-    class basic__bar_t_r1_27b54106__r1_f_955b7f88 extends uvm_reg;
-        rand uvm_reg_field f;
-
-        function new(string name = "basic__bar_t_r1_27b54106__r1_f_955b7f88");
-            super.new(name, 32, UVM_NO_COVERAGE);
-        endfunction : new
-
-        virtual function void build();
-            this.f = new("f");
-            this.f.configure(this, 16, 0, "WO", 0, 'hc8, 1, 1, 0);
-        endfunction : build
-    endclass : basic__bar_t_r1_27b54106__r1_f_955b7f88
-
-    // Regfile - basic::bar_t_r1_27b54106
-    class basic__bar_t_r1_27b54106 extends uvm_reg_block;
-        rand basic__bar_t_r1_27b54106__r1_f_955b7f88 r1[4];
-
-        function new(string name = "basic__bar_t_r1_27b54106");
-            super.new(name);
-        endfunction : new
-
-        virtual function void build();
-            this.default_map = create_map("reg_map", 0, 4, UVM_NO_ENDIAN);
-            foreach(this.r1[i0]) begin
-                this.r1[i0] = new($sformatf("r1[%0d]", i0));
-                this.r1[i0].configure(this);
-                r1[i0].add_hdl_path_slice("r1", -1, -1);
-                r1[i0].add_hdl_path_slice("r1_gate", -1, -1, 0, "GATE");
-                this.r1[i0].build();
-                this.default_map.add_reg(this.r1[i0], 'h0 + i0*'h4);
-            end
-        endfunction : build
-    endclass : basic__bar_t_r1_27b54106
-
-    // Reg - basic::xxx::r1
-    class basic__xxx__r1 extends uvm_vreg;
-        rand uvm_vreg_field f;
-
-        function new(string name = "basic__xxx__r1");
+        function new(string name = "apb_addr_map__apb_mem__r1");
             super.new(name, 32);
         endfunction : new
 
         virtual function void build();
-            this.f = new("f");
-            this.f.configure(this, 16, 0);
+            this.dm = new("dm");
+            this.dm.configure(this, 32, 0);
         endfunction : build
-    endclass : basic__xxx__r1
+    endclass : apb_addr_map__apb_mem__r1
 
-    // Mem - basic::xxx
-    class basic__xxx extends uvm_reg_block;
+    // Mem - apb_addr_map::apb_mem
+    class apb_addr_map__apb_mem extends uvm_reg_block;
         rand uvm_mem m_mem;
-        rand basic__xxx__r1 r1;
+        rand apb_addr_map__apb_mem__r1 r1;
 
-        function new(string name = "basic__xxx");
+        function new(string name = "apb_addr_map__apb_mem");
             super.new(name);
         endfunction : new
 
@@ -200,45 +135,31 @@ package apb_reg_pkg;
             this.m_mem.configure(this);
             this.default_map.add_mem(this.m_mem, 0);
             this.r1 = new("r1");
-            this.r1.configure(this, this.m_mem, 8);
+            this.r1.configure(this, this.m_mem, 256);
             this.r1.build();
         endfunction : build
-    endclass : basic__xxx
+    endclass : apb_addr_map__apb_mem
 
-    // Addrmap - basic
-    class basic extends uvm_reg_block;
-        rand basic__foo foo;
-        rand basic__bar_t bar[4][3];
-        rand basic__bar_t_r1_27b54106 bar2;
-        rand basic__xxx xxx;
+    // Addrmap - apb_addr_map
+    class apb_addr_map extends uvm_reg_block;
+        rand apb_addr_map__apb_rif apb_rif;
+        rand apb_addr_map__apb_mem apb_mem;
 
-        function new(string name = "basic");
+        function new(string name = "apb_addr_map");
             super.new(name);
         endfunction : new
 
         virtual function void build();
             this.default_map = create_map("reg_map", 0, 4, UVM_NO_ENDIAN);
-            this.foo = new("foo");
-            this.foo.configure(this);
-            this.foo.build();
-            this.default_map.add_submap(this.foo.default_map, 'h0);
-            foreach(this.bar[i0, i1]) begin
-                this.bar[i0][i1] = new($sformatf("bar[%0d][%0d]", i0, i1));
-                this.bar[i0][i1].configure(this, "bar");
-                this.bar[i0][i1].add_hdl_path("bar_gate", "GATE");
-                this.bar[i0][i1].build();
-                this.default_map.add_submap(this.bar[i0][i1].default_map, 'h1000 + i0*'h300 + i1*'h100);
-            end
-            this.bar2 = new("bar2");
-            this.bar2.configure(this, "bar");
-            this.bar2.add_hdl_path("bar_gate", "GATE");
-            this.bar2.build();
-            this.default_map.add_submap(this.bar2.default_map, 'h8000);
-            this.xxx = new("xxx");
-            this.xxx.configure(this);
-            this.xxx.build();
-            this.default_map.add_submap(this.xxx.default_map, 'h10000);
+            this.apb_rif = new("apb_rif");
+            this.apb_rif.configure(this);
+            this.apb_rif.build();
+            this.default_map.add_submap(this.apb_rif.default_map, 'h0);
+            this.apb_mem = new("apb_mem");
+            this.apb_mem.configure(this);
+            this.apb_mem.build();
+            this.default_map.add_submap(this.apb_mem.default_map, 'h100);
         endfunction : build
-    endclass : basic
+    endclass : apb_addr_map
 
 endpackage: apb_reg_pkg

@@ -38,6 +38,7 @@
 CURRENT_DIR 	= $(shell pwd)
 VERIF_DIR		= $(shell realpath ./Verification)
 DESIGN_DIR		= $(shell realpath ./Design)
+REGISTER_DIR	= $(shell realpath ./Apb_Reggen)
 DESIGN_SRC  	= $(wildcard ${DESIGN_DIR}/*.sv)
 TESTBENCH_SRC	= $(wildcard ${VERIF_DIR}/*.sv)
 GTKW_FILE 		= ${VERIF_DIR}/*.gtkw
@@ -62,7 +63,7 @@ FPGA_PINMAP 	= ./pinmap/hx1k.pcf
 ###############################################################################
 SIM_DIR 		= $(shell realpath ./Simulation)
 SYNTH_DIR 		= $(shell realpath ./Synthesis)
-REGDIR 			= $(shell realpath ./Reg_Gen)
+REG_DIR_OUT		= $(REGISTER_DIR)/output_all/
 VCD_OUT 		= $(SIM_DIR)/_test.vcd
 VVP_OUT		 	= $(SIM_DIR)/_compiler.out
 SYNTH_JSON_OUT 	= $(SYNTH_DIR)/_synth_output.json
@@ -108,21 +109,36 @@ SIM_DIR		:= $(SIM_DIR)/PYUVM
 else ifeq ($(SIM_TYPE),FORMAL)
 $(info SIM_TYPE is set to FORMAL)
 ifeq ($(FORMAL_TYPE), SBY)
-	$(info SIM_TYPE is set to SBY)
-	DFLAGS 		= -DSBY
-	SIM_DIR		:= $(SIM_DIR)/FORMAL/SBY
+$(info SIM_TYPE is set to SBY)
+DFLAGS 		= -DSBY
+SIM_DIR		:= $(SIM_DIR)/FORMAL/SBY
 else ifeq ($(FORMAL_TYPE), SVA)
-	$(info SIM_TYPE is set to SVA)
-	DFLAGS 		= -DSVA
-	SIM_DIR		:= $(SIM_DIR)/FORMAL/SVA	
+$(info SIM_TYPE is set to SVA)
+DFLAGS 		= -DSVA
+SIM_DIR		:= $(SIM_DIR)/FORMAL/SVA	
 else
-	$(error FORMAL_TYPE is not set)
-	$(info LISTING VALUES: set properly and rerun)
-	$(info SVA: for SVA only)
-	$(info SBY: for Symbyosys supported Assertions)
+$(error FORMAL_TYPE is not set)
+$(info LISTING VALUES: set properly and rerun)
+$(info SVA: for SVA only)
+$(info SBY: for Symbyosys supported Assertions)
 endif
 else
 $(error SIM_TYPE is not set properly)
+endif
+
+###############################################################################
+# LOCAL CRUCIAL VARIABLES 
+###############################################################################
+PRJ_NAME =  	 
+ifndef PRJ_NAME
+$(error PRJ_NAME is not set please set before start any rule)
+else
+$(shell setenv PRJ_NAME ${PRJ_NAME})
+endif
+
+PCFILE 	 =
+ifndef PCFILE
+$(error PCFILE is not set please set before start any rule)
 endif
 
 ###############################################################################
@@ -168,6 +184,12 @@ proj_dir:
 	@mkdir -p ./Report
 
 ###############################################################################
+# Internal Makefile AUX function 
+###############################################################################
+check_defined = $(strip $(foreach 1,$1, $(call __check_defined,$1,$(strip $(value 2)))))
+__check_defined = $(if $(value $1),, $(error Undefined $1$(if $2, ($2))))
+
+###############################################################################
 # Firmware
 ###############################################################################
 firmware:
@@ -189,27 +211,28 @@ genpll:
 ###############################################################################
 # Synthesis
 ###############################################################################
-synth: 
-	$(YOSYS) $(YOSYSFLAGS)
-
 pandr:
 	$(NEXTPNR) $(PNRFLAGS) --json $(SYNTH_JSON_OUT) --pcf $(FPGA_PINMAP) --asc $(FPGA_ASC_OUT)
 
 program:
-	$(ICEPACK) $(FPGA_ASC_OUT) $(FPGA_BIN_OUT)
-	$(ICEPROG) $(ICEPROG_PARAM) $(FPGA_BIN_OUT)
+	$(ICESPROG) $(PRJ_NAME).bin
 
+$(PRJ_NAME).bin: $(PRJ_NAME).asc
+	icepack $< $@
+
+$(PRJ_NAME).asc: $(PRJ_NAME).json
+	@$(NEXTPNR) --up5k --package sg48 --json $< --pcf $(PCFILE) --asc $@
+
+$(PRJ_NAME).json:
+	@$(YOSYS) -l ./yosys.log -p "read_verilog -sv ./*.sv; synth_ice40 -top $(PRJ_NAME) -json $@"
+	
 ###############################################################################
 # Register Generation
 ###############################################################################
-gen_reg_rtl: 
-	@echo "gen_reg_rtl not implemented"
-
-gen_reg_dv: 
-	@echo "gen_reg_dv not implemented"
-
-gen_reg_fpv: 
-	@echo "gen_reg_fpv not implemented"
+gen_reg: 
+	@echo "Invoking Register Generation Script"
+	@cd $(REGISTER_DIR) && make rdb_gen
+	@cd $(SIM_DIR)
 
 ###############################################################################
 # Serial and Clean Rules
@@ -226,25 +249,17 @@ clean:
 # HELP
 ###############################################################################
 help:
-	@echo "	IceSugar or Icebreaker Project Environment:"
-	@echo "	Firmware make commands avaliable:"
-	@echo " make firmware          	->	Empry"
-	@echo " make firmware-test     	-> 	Empty"	
-	@echo " make firmware-load     	-> 	Empty"	
-	@echo " make firmware-flash    	-> 	Empty"	
-	@echo " make firmware-connect  	-> 	Empty"	
-	@echo " make firmware-clear 	-> 	Empty"
+	@echo "	IceSugar or Icebreaker Project Environment"
 	@echo ""
-	@echo "	Other Make commands avaliable:"
-	@echo " make gen_reg_rtl		- "
-	@echo " make gen_reg_dv			- "
-	@echo " make gen_reg_fpv		- "
-	@echo " make simulate			- Run a simple Systemverilog test supported by Icarus"
-	@echo " make pysim				- Run a PyUvm tests supported by Icarus"
-	@echo " make regression 		- Run all PyUvm tests supported by Icarus"
-	@echo " make formal				- Run Formal tests supported by SymbYosys"
-	@echo " make compile            - Run compilation TB top and DUT"
-	@echo " make time              	- Run the STA tests"
-	@echo " make program            - Run the Icesugar or Icebreaker programming"
-	@echo " make synth              - Run all tests"
+	@echo " make gen_reg		    - Runs the Register Generation command"
+	@echo " make simulate			- Runs a simple Systemverilog test supported by Icarus"
+	@echo " make gls     			- Runs GLS with the YOSYS result"
+	@echo " make genpll  			- Runs the ICE40 tool to generate the PLL macro"
+	@echo " make pysim				- Runs a PyUvm tests supported by Icarus"
+	@echo " make regression 		- Runs all PyUvm tests supported by Icarus"
+	@echo " make formal				- Runs Formal tests supported by SymbYosys"
+	@echo " make compile            - Runs compilation TB top and DUT"
+	@echo " make time              	- Runs the STA tests"
+	@echo " make program            - Runs the Icesugar or Icebreaker programming"
+	@echo " make %.josn             - Runs YOSYS for ICE40 to generate the synth file and JSON file"
 	@echo " make clean             	- Clean all "
