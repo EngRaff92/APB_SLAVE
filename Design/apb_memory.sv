@@ -47,7 +47,7 @@
 module apb_memory
 	#(
 		parameter MEMORY_DEPTH 	= 256,	// Number of memory slots
-		parameter MEMORY_DATA  	= 32,	// Data width
+		parameter REG_WIDTH  	= 32,	// Data width
 		parameter ZERO_MEM		= 0   	// If set to 1 then it will zero out the entire memory at the beginning of the SIM
 	)
 	(
@@ -57,14 +57,14 @@ module apb_memory
 		input logic 							mem_ares,	// memory async reset used not only if memoery clocked is enabled
 		input logic 							mem_wr_en,	// write enable
 		input logic 							mem_cs,		// memory slave chip select to enable the memory functionality
-		input logic [MEMORY_DATA-1:0] 			mwdata,		// memory write data
+		input logic [REG_WIDTH-1:0] 			mwdata,		// memory write data
 		input logic [$clog2(MEMORY_DEPTH)-1:0] 	maddr,		// memory address
-		output logic [MEMORY_DATA-1:0] 			mrdata,		// memory read data
+		output logic [REG_WIDTH-1:0] 			mrdata,		// memory read data
 		output logic 							mem_ready	// memory ready tied to 1 if memory not clocked
 		);
 
 	// Main memory
-	logic [MEMORY_DATA-1:0] mem_apb [MEMORY_DEPTH-1:0];
+	logic [REG_WIDTH-1:0] mem_apb [MEMORY_DEPTH-1:0];
 	
 	// Memory RD/WR main process resolved in no cycle
 `ifdef CYCLED_MEM
@@ -134,4 +134,4 @@ module apb_memory
 	// Since memory will not consume cycles unless a parameter is set will be always ready
 	assign mem_ready = 1;
 `endif
-endmodule: apb_memory
+endmodule

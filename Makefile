@@ -133,7 +133,7 @@ PRJ_NAME =
 ifndef PRJ_NAME
 $(error PRJ_NAME is not set please set before start any rule)
 else
-$(shell setenv PRJ_NAME ${PRJ_NAME})
+export PRJ_NAME = ${PRJ_NAME}
 endif
 
 PCFILE 	 =

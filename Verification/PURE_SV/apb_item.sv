@@ -56,6 +56,23 @@ class apb_item;
        apb_print($sformatf("Print TRX -> Data Write     %0h: ",data_wr),LOW,INFO);
        apb_print($sformatf("Print TRX -> Access Part    %0s: ",access_part.name()),LOW,INFO);
        apb_print($sformatf("Print TRX -> CMD type       %0s: ",cmd.name()),LOW,INFO);
-       apb_print($sformatf("Print TRX -> Data read      %0h: ",data_rd),LOW,INFO);
     endfunction // apb_item_print
+    
+    // Post randomize
+    //postrandomize function, displaying randomized values of items 
+    function void post_randomize();
+        this.apb_item_print();
+    endfunction
+  
+    // Deep copy method
+    function apb_item do_copy();
+        apb_item _t = new("copy_apb_item");
+        _t = new();
+        _t.address      = this.address;
+        _t.data_wr      = this.data_wr;
+        _t.access_part  = this.access_part;
+        _t.cmd          = this.cmd;
+        _t.data_rd      = this.data_rd;
+        return _t;
+  endfunction
 endclass

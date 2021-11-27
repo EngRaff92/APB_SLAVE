@@ -45,9 +45,8 @@ module apb_slave_controller #(
   parameter REG_WIDTH     = 32,   // Single register WIDTH (single WORD alligned acces)
   parameter WAIT_STATE    = 0,    // this will basically used in case of Slower sub-slaves
   parameter MEMORY_DEPTH  = 256,  // Number of memory slots   
-  parameter MEMORY_DATA   = 32,   // Data width
   parameter ZERO_MEM      = 0,    // If set to 1 then it will zero out the entire memory at the beginning of the SIM
-  parameter DEC_WIDTH     = 32  // Decoder Parameter
+  parameter DEC_WIDTH     = 32    // Decoder Parameter
   )
 (
   // Port Declaration
@@ -98,7 +97,7 @@ module apb_slave_controller #(
     always_comb begin : proc_fsm
       if(cstate == IDLE) begin: idle_state
         if(psel) nstate   = SETUP_PHASE;
-        else     nstate  = IDLE;
+        else     nstate   = IDLE;
       end
       else if(cstate == SETUP_PHASE) begin: setup_phase
         // Tell the Master we accepted the TRX sent over
@@ -138,15 +137,50 @@ module apb_slave_controller #(
     end
 
     // Additional Signals for DECODER to sub_slaves connection
-    logic slv0_ready, slv1_ready, slv_wr_rd_en;
+    logic slvx_ready[N_OF_SLAVES-1:0];
+    logic slv_wr_rd_en;
     logic [N_OF_SLAVES-1:0] slv_cs;
     logic [MEMORY_DATA-1:0] mem_data_out;
     logic [REG_WIDTH-1:0]   rif_data_out;
     logic [$clog2(MEMORY_DEPTH)-1:0] mem_int_addr;
-
+  
+    // Declare the merging Arrays of Data
+  logic [REG_WIDTH-1:0]   slvx_data_out[N_OF_SLAVES-1:0];
+    
+    // Assign the Data to the merging array (if more bandwith is used in the memory just concatenate it)
+  genvar jj;
+    generate
+      for(jj=0; jj<N_OF_SLAVES; jj++) begin
+        if(jj==0) begin
+          assign slvx_data_out[0] = rif_data_out;
+        end
+        else if(jj==1) begin
+          assign slvx_data_out[1] = mem_data_out;
+        end
+        else if(jj==2) begin
+          assign slvx_data_out[2] = 'h0;
+        end
+        else if(jj==3) begin
+          assign slvx_data_out[3] = 'h0;
+        end
+        else if(jj==4) begin
+          assign slvx_data_out[4] = 'h0;
+        end
+        else if(jj==5) begin
+          assign slvx_data_out[5] = 'h0;
+        end
+        else if(jj==6) begin
+          assign slvx_data_out[6] = 'h0;
+        end
+        else if(jj==7) begin
+          assign slvx_data_out[7] = 'h0;
+        end
+      end       
+    endgenerate
+                                          
     // The memory should be single word alligned
     assign mem_int_addr = ((paddr-`MEM_ADDR_START) >> 2);
-
+  
     // APB DECODER
     apb_decoder#(
       .DEC_WIDTH      (REG_WIDTH),
@@ -159,10 +193,8 @@ module apb_slave_controller #(
         .dec_mst_addr    (paddr),
         .dec_mst_wr_rd_en(pwrite),
         .dec_mst_cs      (penable),
-        .dec_slv0_ready  (slv0_ready),
-        .dec_slv1_ready  (slv1_ready),
-        .dec_slv0_rd_data(rif_data_out),
-        .dec_slv1_rd_data(mem_data_out),
+        .dec_slvx_ready  (slvx_ready),
+        .dec_slvx_rd_data(slvx_data_out),
         .dec_slv_cs      (slv_cs),
         .dec_mst_rdata   (prdata),
         .dec_slv_ready   (pready),
@@ -173,7 +205,7 @@ module apb_slave_controller #(
     // APB MMEMORY (WORD ALLIGNED ACCESS)
     apb_memory#(
       .ZERO_MEM     (ZERO_MEM),
-      .MEMORY_DATA  (MEMORY_DATA),
+      .REG_WIDTH    (REG_WIDTH),
       .MEMORY_DEPTH (MEMORY_DEPTH)
       ) u_apb_mem(
 `ifdef CYCLED_MEM
@@ -185,7 +217,7 @@ module apb_slave_controller #(
         .mwdata   (pwdata),
         .maddr    (mem_int_addr),
         .mrdata   (mem_data_out),
-        .mem_ready(slv0_ready)
+        .mem_ready(slvx_ready[1])
       );
 
     // APB RIF
@@ -200,7 +232,7 @@ module apb_slave_controller #(
         .rif_wdata(pwdata),
         .rif_rdata(rif_data_out),
         .rif_error(pslverror),
-        .rif_ready(slv1_ready)
+        .rif_ready(slvx_ready[0])
       );
 
 endmodule : apb_slave_controller

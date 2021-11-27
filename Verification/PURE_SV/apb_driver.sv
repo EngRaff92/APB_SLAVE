@@ -37,12 +37,11 @@
 
 class apb_trx_driver#(type T = apb_item);
     // Type propagation
-    T driv_apb_trx;
+    T driv_apb_trx, monitor_apb_trx;
 
     // local variables
     int trx_cnt;
     string driver_name;
-    reg_data_t read_data;
 
     // Mailbox
     mailbox#(T) driver_mbox;
@@ -70,8 +69,13 @@ class apb_trx_driver#(type T = apb_item);
             if(driv_apb_trx.cmd == WRITE)
                 driver_apb_if.apb_wr(driv_apb_trx.address,driv_apb_trx.data_wr);
             else if(driv_apb_trx.cmd == READ)
-                driver_apb_if.apb_rd(driv_apb_trx.address,read_data);
-            // Copy TRX to a new one and sed it to the monitor
+                driver_apb_if.apb_rd(driv_apb_trx.address,driv_apb_trx.data_rd);
+            // Print Read Data
+            apb_print($sformatf("Print TRX -> Data read      %0h: ",driv_apb_trx.data_rd),LOW,INFO);
+            // Copy TRX to a new one and sed it to the monitor's
+            monitor_apb_trx = driv_apb_trx.do_copy();
+            // Send the item to the monitor
+            //driver_mbox.put(monitor_apb_trx);
         end
     endtask // apb_drive_trx
 endclass // apb_trx_driver

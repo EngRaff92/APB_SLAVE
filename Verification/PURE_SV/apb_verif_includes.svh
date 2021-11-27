@@ -38,23 +38,7 @@
 // ########################################################################################################
 // Defines and Parameters for Testbench
 // ########################################################################################################
-
-// Define Regsiter Addresses List
-`define wren    'd0
-`define status1 'd4
-`define status2 'd8
-`define status3 'd12
-`define data1   'd16
-`define data2   'd20
-`define data3   'd24
-
-// RIF ADDRESS SPACE
-`define RIF_ADDR_START  'h0
-`define RIF_ADDR_END    'h3C
-// MEMORY ADDRESS SPACE
-`define MEM_ADDR_START  'h40
-
-`define MEM_ADDR_END    'h43C
+`include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Apb_Reggen/output_all/apb_reg_param.svh"
 
 // Parameters
 parameter REG_WIDTH = 32;

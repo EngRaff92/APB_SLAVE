@@ -38,37 +38,20 @@
 // ########################################################################################################
 // Defines and Parameters for DESIGN
 // ########################################################################################################
+// Include the Auto generated sets of parameters
+`include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Apb_Reggen/output_all/apb_reg_param.svh"
+
 // SLV checker
-`define SLV0 	2'b01
-`define SLV1 	2'b10
-`define NSLV 	2'b00
-`define ILLEGAL 2'b11
-
-// Address with names
-`define wren	'd0
-`define status1	'd4
-`define status2	'd8
-`define status3	'd12
-`define data1	'd16
-`define data2	'd20
-`define data3	'd24
-
-// Decoder cutshort
-`define dec_wren	`wren >> 2
-`define dec_status1	`status1 >> 2
-`define dec_status2	`status2 >> 2     
-`define dec_status3	`status3 >> 2
-`define dec_data1	`data1 >> 2
-`define dec_data2	`data2 >> 2
-`define dec_data3	`data3 >> 2
-
-// RIF ADDRESS SPACE
-`define RIF_ADDR_START	'h0
-`define RIF_ADDR_END	'h3C
-
-// MEMORY ADDRESS SPACE
-`define MEM_ADDR_START	'h40
-`define MEM_ADDR_END	'h43C
+`define SLV0  1<<0
+`define SLV1  1<<1
+`define SLV2  1<<2
+`define SLV3  1<<3
+`define SLV4  1<<4
+`define SLV5  1<<5
+`define SLV6  1<<6
+`define SLV7  1<<7
+`define NSLV  1<<8
 
 // SLAVES
-`define NUMBER_OF_SLVS 	2
+`define NUMBER_OF_SLVS  2
+`define MAX_N_OF_SLVS   8

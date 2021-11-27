@@ -47,15 +47,15 @@ module apb_rif #(
   )
 (
 	// Port Declaration
-  	input logic 					rif_clk,    // Clock
-  	input logic 					rif_arst,   // Asynchronous reset active high
-  	input logic 					rif_write,  // If 0 -> Read if 1 -> Write
-  	input logic 					rif_cs,     // States if the slave has been properly selected 
+  	input logic 					rif_clk,    				// Clock
+  	input logic 					rif_arst,   				// Asynchronous reset active high
+  	input logic 					rif_write,  				// If 0 -> Read if 1 -> Write
+  	input logic 					rif_cs,     				// States if the slave has been properly selected 
   	input logic [REG_WIDTH-1:0] 	rif_addr, 	// Address coming into the bus
   	input logic [REG_WIDTH-1:0] 	rif_wdata,  // Write Data coming into the bus
   	output logic[REG_WIDTH-1:0] 	rif_rdata,  // Read Data coming out the bus
-  	output logic 					rif_error,  // Give error in few specific conditions only 
-  	output logic 					rif_ready   // Is controlled by the slave and claims if the specifc slave is busy or not
+  	output logic 					rif_error,  				// Give error in few specific conditions only 
+  	output logic 					rif_ready   				// Is controlled by the slave and claims if the specifc slave is busy or not
 );
 
     // Sets of registers (Status register only) Access Policy is RO

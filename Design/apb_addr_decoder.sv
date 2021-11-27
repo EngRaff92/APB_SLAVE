@@ -45,59 +45,168 @@
 // Main Module
 module apb_decoder
 	#(
-		parameter N_OF_SLAVES 		= 'h2,
+		parameter N_OF_SLAVES 		= 'h8,
 		parameter SLV0_START_ADDR 	= 'h0,
-		parameter SLV0_END_ADDR 	= 'h3C,
-		parameter SLV1_START_ADDR 	= 'h40,
-		parameter SLV1_END_ADDR 	= 'hFF,
+		parameter SLV0_END_ADDR 	= 'h0,
+		parameter SLV1_START_ADDR 	= 'h0,
+		parameter SLV1_END_ADDR 	= 'h0,
+		parameter SLV2_START_ADDR 	= 'h0,
+		parameter SLV2_END_ADDR 	= 'h0,
+		parameter SLV3_START_ADDR 	= 'h0,
+		parameter SLV3_END_ADDR 	= 'h0,
+		parameter SLV4_START_ADDR 	= 'h0,
+		parameter SLV4_END_ADDR 	= 'h0,
+		parameter SLV5_START_ADDR 	= 'h0,
+		parameter SLV5_END_ADDR 	= 'h0,
+		parameter SLV6_START_ADDR 	= 'h0,
+		parameter SLV6_END_ADDR 	= 'h0,
+		parameter SLV7_START_ADDR 	= 'h0,
+		parameter SLV7_END_ADDR 	= 'h0,
 		parameter DEC_WIDTH 		= 32
 	)
 	(
-		input logic [DEC_WIDTH-1:0] 			dec_mst_addr,		// Address from Master (PADDR)
-		input logic 							dec_mst_wr_rd_en,	// write or read operation from Master (PWRITE)
-		input logic 							dec_mst_cs,			// chip select from Master (PENABLE)
-		input logic 							dec_slv0_ready,		// ready signal from slave 0
-		input logic 							dec_slv1_ready,		// ready signal from slave 1
-		input logic [DEC_WIDTH-1:0] 			dec_slv0_rd_data,	// read data from slave 0
-		input logic [DEC_WIDTH-1:0] 			dec_slv1_rd_data,	// read data from slave 1
-		output logic [N_OF_SLAVES-1:0] 			dec_slv_cs,			// chip select which identifies the slave selected (ONE HOT)
-		output logic [DEC_WIDTH-1:0] 			dec_mst_rdata,		// valid read data from selected slave
-		output logic 							dec_slv_ready,		// valid ready from selected slave
-		output logic 							dec_slv_wr_rd_en	// Write or read enable to be rooted to the proper slave
+		input logic [DEC_WIDTH-1:0] 			dec_mst_addr,							// Address from Master (PADDR)
+		input logic 							dec_mst_wr_rd_en,						// write or read operation from Master (PWRITE)
+		input logic 							dec_mst_cs,								// chip select from Master (PENABLE)
+		input logic 							dec_slvx_ready[N_OF_SLAVES:0],		    // ready signal from slave 0
+        input logic [DEC_WIDTH-1:0] 			dec_slvx_rd_data[N_OF_SLAVES:1],		// read data from slave 0
+		output logic [N_OF_SLAVES-1:0] 			dec_slv_cs,								// chip select which identifies the slave selected (ONE HOT)
+		output logic [DEC_WIDTH-1:0] 			dec_mst_rdata,							// valid read data from selected slave
+		output logic 							dec_slv_ready,							// valid ready from selected slave
+		output logic 							dec_slv_wr_rd_en						// Write or read enable to be rooted to the proper slave
 		);
+  
+	// Local parameters and checks
+	localparam MAX_N_OF_SLVS = 8;
+	initial begin
+		param_checker: assert(N_OF_SLAVES <= MAX_N_OF_SLVS) else $error("Number of slaves used is greater the supported number");
+	end
 
-	// Main decoder logic
-	logic [N_OF_SLAVES-1:0] internal_decode;
+	// Main decoder logic the decode is made by 1 bit more to detect no SLV selected
+	logic [MAX_N_OF_SLVS:0] internal_decode;
 	always_comb begin: decoder_logic
 		if((dec_mst_addr >= SLV0_START_ADDR) && (dec_mst_addr <= SLV0_END_ADDR)) 
 			internal_decode = `SLV0;
 		else if((dec_mst_addr >= SLV1_START_ADDR) && (dec_mst_addr <= SLV1_END_ADDR))
 			internal_decode = `SLV1;
+		else if((dec_mst_addr >= SLV2_START_ADDR) && (dec_mst_addr <= SLV2_END_ADDR))
+			internal_decode = `SLV2;
+		else if((dec_mst_addr >= SLV3_START_ADDR) && (dec_mst_addr <= SLV3_END_ADDR))
+			internal_decode = `SLV3;
+		else if((dec_mst_addr >= SLV4_START_ADDR) && (dec_mst_addr <= SLV4_END_ADDR))
+			internal_decode = `SLV4;
+		else if((dec_mst_addr >= SLV5_START_ADDR) && (dec_mst_addr <= SLV5_END_ADDR))
+			internal_decode = `SLV5;
+		else if((dec_mst_addr >= SLV6_START_ADDR) && (dec_mst_addr <= SLV6_END_ADDR))
+			internal_decode = `SLV6;
+		else if((dec_mst_addr >= SLV7_START_ADDR) && (dec_mst_addr <= SLV7_END_ADDR))
+			internal_decode = `SLV7;
 		else 
 			internal_decode = `NSLV; 
 	end
 
 	// Assign the internal decode value to the chip select only and only if the MASTER is selecting 
 	// the decoder, essentially when the PENABLE is hight so that the TRX can start 
-	assign dec_slv_cs[0] = internal_decode[0] & dec_mst_cs;
-	assign dec_slv_cs[1] = internal_decode[1] & dec_mst_cs;
+	genvar i;
+	generate
+		for(i=0; i<N_OF_SLAVES; i++)
+			assign dec_slv_cs[i] = internal_decode[i] & dec_mst_cs;
+	endgenerate
 
 	// Propagate the PWRITE to the slaves (dec_mst_wr_rd_en is out PWRITE)
 	assign dec_slv_wr_rd_en = dec_mst_wr_rd_en;
-
-	// Select the RD_DATA according to the slave selection
-	always_comb begin: rd_data_selector
-		if(internal_decode == `SLV0) 		// SLV0
-			dec_mst_rdata = dec_slv0_rd_data;
-		else if(internal_decode == `SLV1)  	// SLV1
-			dec_mst_rdata = dec_slv1_rd_data;
-	end
-
-	// PREADY combo logic according to the CS (RIF is slower then the Memory by 1 clock cycle)
-	always_comb begin: ready_selector
-		if(internal_decode == `SLV0) 		// SLV0
-			dec_slv_ready = dec_slv0_ready;
-		else if(internal_decode == `SLV1)  	// SLV1
-			dec_slv_ready = dec_slv1_ready;
-	end
+  	
+  	// set the RD_DATA according to the slave selection make sure to not use the MSB of internal decode
+  	always_comb begin
+      if(internal_decode[MAX_N_OF_SLVS]) 
+        dec_mst_rdata = '0;
+      else if(internal_decode[0])
+        dec_mst_rdata = dec_slvx_rd_data[1];
+      else if(internal_decode[1])
+        dec_mst_rdata = dec_slvx_rd_data[2];
+      else if(internal_decode[2])
+        dec_mst_rdata = dec_slvx_rd_data[3];
+      else if(internal_decode[3])
+        dec_mst_rdata = dec_slvx_rd_data[4];
+      else if(internal_decode[4])
+        dec_mst_rdata = dec_slvx_rd_data[5];
+      else if(internal_decode[5])
+        dec_mst_rdata = dec_slvx_rd_data[6];
+      else if(internal_decode[6])
+        dec_mst_rdata = dec_slvx_rd_data[7];
+      else if(internal_decode[7])
+        dec_mst_rdata = dec_slvx_rd_data[8];
+    end
+  	
+  	always_comb begin
+      if(internal_decode[MAX_N_OF_SLVS]) 
+        dec_slv_ready = '0;
+      else if(internal_decode[0])
+        dec_slv_ready = dec_slvx_ready[1];
+      else if(internal_decode[1])
+        dec_slv_ready = dec_slvx_ready[2];
+      else if(internal_decode[2])
+        dec_slv_ready = dec_slvx_ready[3];
+      else if(internal_decode[3])
+        dec_slv_ready = dec_slvx_ready[4];
+      else if(internal_decode[4])
+        dec_slv_ready = dec_slvx_ready[5];
+      else if(internal_decode[5])
+        dec_slv_ready = dec_slvx_ready[6];
+      else if(internal_decode[6])
+        dec_slv_ready = dec_slvx_ready[7];
+      else if(internal_decode[7])
+        dec_slv_ready = dec_slvx_ready[8];
+    end
+  
+	logic dbl;
+	logic [31:0] db;
+	assign dbl = dec_slvx_ready[2];
+	assign db = dec_slvx_rd_data[2];
 endmodule: apb_decoder
+
+/*
+	// lect the RD_DATA according to the slave selection make sure to not use the MSB of internal decode
+  	always_comb begin
+      if(internal_decode[MAX_N_OF_SLVS])
+        dec_mst_rdata = '0;
+      else begin
+        dec_mst_rdata = '0;
+        for(int j=1;j<=N_OF_SLAVES;j++) begin
+          if(internal_decode[MAX_N_OF_SLVS-1:0] == j)
+            dec_mst_rdata = dec_slvx_rd_data[j];
+//           else
+//             dec_mst_rdata = '0;
+        end
+      end
+    end
+  
+//   	genvar j;
+//     generate 
+//       for(j=1;j<=N_OF_SLAVES;j++) begin
+//         assign dec_mst_rdata = (internal_decode[MAX_N_OF_SLVS] ? '0 : ((internal_decode[MAX_N_OF_SLVS-1:0] == j) ? dec_slvx_rd_data[j] : '0));
+//       end
+//     endgenerate 
+  	
+  	always_comb begin
+      if(internal_decode[MAX_N_OF_SLVS])
+        dec_slv_ready = '0;
+      else begin
+        dec_slv_ready = '0;
+        for(int h=1;h<=N_OF_SLAVES;h++) begin
+          if(internal_decode[MAX_N_OF_SLVS-1:0] == h)
+            dec_slv_ready = dec_slvx_ready[h];
+//           else
+//             dec_slv_ready = '0;
+        end
+      end
+    end
+  
+	// PREADY combo logic according to the CS (RIF is slower then the Memory by 1 clock cycle)
+//     genvar h;
+//     generate 
+//       for(h=1;h<=N_OF_SLAVES;h++) begin
+//         assign dec_slv_ready = (internal_decode[MAX_N_OF_SLVS] ? '0 : ((internal_decode[N_OF_SLAVES:0] == h) ? dec_slvx_ready[h] : '0));
+//       end
+//     endgenerate 
+*/

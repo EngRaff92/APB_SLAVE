@@ -38,3 +38,4 @@ header = """/*
 """
 
 param_template = "parameter $name = $value;"
+define_template = "`define $name  $value"

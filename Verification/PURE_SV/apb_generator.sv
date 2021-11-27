@@ -37,15 +37,15 @@
 
 class apb_trx_generator#(type T = apb_item);
     // Type propagation
-    T apb_trx;
+    rand T apb_trx;
 
     // local variables
-    int         trx_cnt;
-    string      gen_name;
-    reg_data_t  address;
-    reg_data_t  data_wr;
-    access_t    access_part;
-    apb_cmd_t   cmd;
+    int                 trx_cnt;
+    string              gen_name;
+    rand reg_data_t     addr;
+    rand reg_data_t     wdata;
+    rand access_t       access;
+    rand apb_cmd_t      kind;
 
     // Mailbox
     mailbox#(T) gen_mbox;
@@ -65,13 +65,13 @@ class apb_trx_generator#(type T = apb_item);
         apb_trx = new($sformatf("apb_trx_%0d",trx_cnt));
         if(rand_with_user_values) begin
             // Print out
-            apb_print($sformatf("Use randomization selected in: %0s",gen_name),LOW,FATAL);
+          apb_print($sformatf("Use randomization selected in: %0s",gen_name),LOW,INFO);
             // Randomize    
             if(!apb_trx.randomize() with {
-                apb_trx.address     == this.address;
-                apb_trx.data_wr     == this.data_wr;
-                apb_trx.access_part == this.access_part;
-                apb_trx.cmd         == this.cmd;})
+                apb_trx.address     == local::addr;
+                apb_trx.data_wr     == local::wdata;
+                apb_trx.access_part == local::access;
+                apb_trx.cmd         == local::kind;})
                 apb_print("Not able to randomize TRX",LOW,FATAL);
         end
         else begin
@@ -79,8 +79,6 @@ class apb_trx_generator#(type T = apb_item);
             if(!apb_trx.randomize())
                 apb_print("Not able to randomize TRX",LOW,FATAL);
         end
-        // Print out the TRX
-        apb_trx.apb_item_print();
         // Send the item through the Mailbox
         gen_mbox.put(apb_trx);
         // Increment the counter

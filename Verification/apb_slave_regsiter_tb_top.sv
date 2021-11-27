@@ -77,7 +77,6 @@ module tb_top;
     	.REG_WIDTH   (32),
       	.ZERO_MEM    (0),
       	.DEC_WIDTH   (32),
-      	.MEMORY_DATA (32),
       	.MEMORY_DEPTH(256),
       	.WAIT_STATE  (0)
 		) uut(.*);
@@ -211,14 +210,14 @@ module tb_top;
 	    wait(rst_done.triggered);
 	    `endif
 	    apb_print("RST done",LOW,INFO);
-        apb_wr(`wren,'b100);
-        apb_rd(`wren, d);
-        apb_wr(`data3,'hA);
-        apb_rd(`data3, d);
-        apb_rd(`status1, d);
-        apb_wr(`data1,'hA);
-        apb_rd(`data1, d);
-      	for(int i = `MEM_ADDR_START; i < `MEM_ADDR_END; i+=4) begin
+        apb_wr(`register_write_enable,'b100);
+        apb_rd(`register_write_enable, d);
+        apb_wr(`register_data3,'hA);
+        apb_rd(`register_data3, d);
+        apb_rd(`register_data_status_1, d);
+        apb_wr(`register_data1,'hA);
+        apb_rd(`register_data1, d);
+      	for(int i = `memory_adress_start; i < `memory_adress_end; i+=4) begin
         	apb_wr(i,i+'hA);
         	apb_rd(i,d);
         	if(d != (i+'hA))

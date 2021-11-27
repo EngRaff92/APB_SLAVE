@@ -30,7 +30,6 @@ def convert_reg(rdlc: RDLCompiler, obj: node.RegNode) -> dict:
     for field in obj.fields():
         json_field = convert_field(rdlc, field)
         json_obj['children'].append(json_field)
-
     return json_obj
 
 def convert_reg_in_memory(rdlc: RDLCompiler, obj: node.RegNode, absolute_adress, position) -> dict:
@@ -38,7 +37,7 @@ def convert_reg_in_memory(rdlc: RDLCompiler, obj: node.RegNode, absolute_adress,
     json_obj = dict()
     json_obj['type'] = 'reg'
     json_obj['inst_name'] = obj.inst_name + "_{}".format(position)
-    json_obj['address_offset'] = hex(absolute_adress + (position* int(obj.total_size/8)))
+    json_obj['address_offset'] = hex(absolute_adress + (position * obj.size))
     json_obj['size'] = obj.total_size
 
     # Iterate over all the fields in this reg and convert them
@@ -76,7 +75,7 @@ def convert_addrmap_or_regfile(rdlc: RDLCompiler, obj: Union[node.AddrmapNode, n
                     for index in range(child.array_dimensions[el]):
                         json_child = convert_reg_in_memory(rdlc, child, obj.address_offset,index)
                         json_obj['children'].append(json_child)
-                json_obj['memory_adress_end'] = hex(obj.raw_absolute_address + ((child.array_dimensions[0]-1)* int(child.total_size/8)))
+                json_obj['memory_adress_end'] = hex(obj.raw_absolute_address + ((child.array_dimensions[0]-1)* int(child.size)))
             else:
                 json_child = convert_reg(rdlc, child)
                 json_obj['children'].append(json_child)

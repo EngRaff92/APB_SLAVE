@@ -100,17 +100,22 @@ def gen_lists_and_csv(data):
         df.to_csv("./output_all/apb_reg.csv", sep=',',index=False)
     f.close()
     t = Template(temp.param_template+'\n')
+    d = Template(temp.define_template+'\n')
     with open('./output_all/apb_reg_param.svh', 'x') as f:
         ## Fristly write the header
         f.write(temp.header)
         for x in res.keys():
             if res2[x] == regfile_type:
                 a=t.substitute({'name' : "{}_{}".format(res2[x],x), 'value' : res[x].replace('0x',"32'h")})
+                b=d.substitute({'name' : "{}_{}".format(res2[x],x), 'value' : res[x].replace('0x',"32'h")})
             elif res2[x] == memory_type:
                 a=t.substitute({'name' : "{}".format(x), 'value' : res[x].replace('0x',"32'h")})
+                b=d.substitute({'name' : "{}".format(x), 'value' : res[x].replace('0x',"32'h")})
             else:
                 a=t.substitute({'name' : "register_{}".format(x), 'value' : res[x].replace('0x',"32'h")})
+                b=d.substitute({'name' : "register_{}".format(x), 'value' : res[x].replace('0x',"32'h")})
             f.write(a)
+            f.write(b)
     f.close()
 
 def main():
