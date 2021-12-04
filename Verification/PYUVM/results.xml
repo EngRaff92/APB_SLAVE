@@ -1,6 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="1636230944" />
-    <testcase name="test_alu" classname="tinyalu_cocotb" file="/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Verification/PYUVM/tinyalu_cocotb.py" lineno="99" time="0.005550861358642578" sim_time_ns="576000" ratio_time="103767679.06537239" />
-  </testsuite>
-</testsuites>
