@@ -46,6 +46,7 @@ parameter REG_WIDTH = 32;
 // ########################################################################################################
 // Macros and Types
 // ########################################################################################################
+
 //
 typedef enum int {
     WO  = 0,
@@ -80,6 +81,12 @@ typedef enum bit {
     WRITE  = 0,
     READ   = 1
 } apb_cmd_t;
+
+//
+typedef enum bit {
+    APB_OK  = 0,
+    APB_ERR = 1
+} apb_resp_t;
 
 //
 typedef bit [31:0] reg_data_t;
@@ -147,10 +154,11 @@ endfunction
 `include "./apb_scoreboard.sv"
 `include "./apb_env.sv"
 `include "./apb_base_test.sv"
-// `include "./apb_rif_only_RAR.sv"
-// `include "./apb_rif_only_WAR_RAW.sv"
-// `include "./apb_rif_only_RANDOM.sv"y_STATUS_CHECK.sv"
-// `include "./apb_rif_only_ERROR_CHECK.sv"
-// `include "./apb_memory_only_RAR.sv""
-// `include "./apb_memory_only_WAR_RAW.sv"
-// `include "./apb_memory_only_RANDOM.sv
+`include "./apb_rif_only_RAR.sv"
+`include "./apb_rif_only_WAR_RAW.sv"
+`include "./apb_rif_only_RANDOM.sv"
+`include "./apb_rif_only_STATUS_CHECK.sv"
+`include "./apb_rif_only_ERROR_CHECK.sv"
+`include "./apb_memory_only_RAR.sv"
+`include "./apb_memory_only_WAR_RAW.sv"
+`include "./apb_memory_only_RANDOM.sv

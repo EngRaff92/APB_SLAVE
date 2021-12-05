@@ -37,5 +37,6 @@ header = """/*
 */
 """
 
+## Parameter and define template
 param_template = "parameter $name = $value;"
 define_template = "`define $name  $value"
