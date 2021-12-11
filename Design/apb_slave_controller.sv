@@ -63,7 +63,7 @@ module apb_slave_controller #(
     output logic                pready      // Is controlled by the slave and claims if the specifc slave is busy or not
 );
     // Internal signals
-    logic [WAIT_STATE-1:0] cnt;
+    logic [WAIT_STATE:0] cnt;
     logic g_clk;
       
     // FSM state
@@ -137,11 +137,11 @@ module apb_slave_controller #(
     end
 
     // Additional Signals for DECODER to sub_slaves connection
-    logic slvx_ready[N_OF_SLAVES-1:0];
+    logic slvx_ready[N_OF_SLAVES:0];
     logic slv_wr_rd_en;
     logic [N_OF_SLAVES-1:0] slv_cs;
-    logic [MEMORY_DATA-1:0] mem_data_out;
-    logic [REG_WIDTH-1:0]   rif_data_out;
+    logic [REG_WIDTH-1:0] mem_data_out;
+    logic [REG_WIDTH-1:0] rif_data_out;
     logic [$clog2(MEMORY_DEPTH)-1:0] mem_int_addr;
     
     // additional signals for the RIF
@@ -189,16 +189,16 @@ module apb_slave_controller #(
       endgenerate
                                           
     // The memory should be single word alligned
-    assign mem_int_addr = ((paddr-`MEM_ADDR_START) >> 2);
+    assign mem_int_addr = ((paddr-`memory_adress_start) >> 2);
   
     // APB DECODER
     apb_decoder#(
       .DEC_WIDTH      (REG_WIDTH),
       .N_OF_SLAVES    (`NUMBER_OF_SLVS),
-      .SLV0_START_ADDR(`RIF_ADDR_START),
-      .SLV0_END_ADDR  (`RIF_ADDR_END),
-      .SLV1_START_ADDR(`MEM_ADDR_START),
-      .SLV1_END_ADDR  (`MEM_ADDR_END)
+      .SLV0_START_ADDR(`regfile_apb_rif),
+      .SLV0_END_ADDR  (`register_data_status_3),
+      .SLV1_START_ADDR(`memory_adress_start),
+      .SLV1_END_ADDR  (`memory_adress_end)
       ) u_apb_decoder(
         .dec_mst_addr    (paddr),
         .dec_mst_wr_rd_en(pwrite),
@@ -232,7 +232,7 @@ module apb_slave_controller #(
 
     // APB RIF
     apb_rif#(
-      .REG_WIDTH(REG_WIDTH)
+      .REG_WIDTH(REG_WIDTH),
       .ERROUT_IF_NOT_ACCESS(1)
       ) u_apb_rif(
         .rif_clk          (pclk),
@@ -255,7 +255,7 @@ module apb_slave_controller #(
 
     // Error Generator if we try to access the DATA register while WRITE EN is 0
     always_comb begin
-      if(paddr >= `data_1 && paddr <= `data_3) begin
+      if(paddr >= `register_data1 && paddr <= `register_data3) begin
         if((paddr[3:2] == 2'b00) && write_enable_out[0] && pwrite)
           data_status_1_in = 1'b1;
         else if((paddr[3:2] == 2'b01) && write_enable_out[1] && pwrite)  
@@ -276,9 +276,9 @@ module apb_slave_controller #(
     end
 
     // Error capturing
-    always_ff @(posedge g_clk or posedge prst) begin : proc_error
+    always_ff @(negedge g_clk or posedge prst) begin : proc_error
       if(prst) begin
-        penable <= 0;
+        pslverror <= 0;
       end else begin
         if(penable)
           pslverror <= rif_error_out | data_status_1_in | data_status_2_in | data_status_3_in;

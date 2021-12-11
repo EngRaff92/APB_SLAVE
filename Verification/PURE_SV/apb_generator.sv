@@ -65,7 +65,7 @@ class apb_trx_generator#(type T = apb_item);
         apb_trx = new($sformatf("apb_trx_%0d",trx_cnt));
         if(rand_with_user_values) begin
             // Print out
-          apb_print($sformatf("Use randomization selected in: %0s",gen_name),LOW,INFO);
+            apb_print($sformatf("Use randomization selected in: %0s",gen_name),LOW,INFO);
             // Randomize    
             if(!apb_trx.randomize() with {
                 apb_trx.address     == local::addr;

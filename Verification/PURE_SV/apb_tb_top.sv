@@ -44,7 +44,7 @@ module apb_tb_top;
 	bit pclk;
 
 	// local test
-	apb_base_test test_base;
+	apb_memory_only_RAR test;
 
 	// Interface declaration
 	apb_interface#(.REG_WIDTH(REG_WIDTH)) apb_if(.apb_clock(pclk));
@@ -55,7 +55,6 @@ module apb_tb_top;
     	.REG_WIDTH   (32),
       	.ZERO_MEM    (0),
       	.DEC_WIDTH   (32),
-      	.MEMORY_DATA (32),
       	.MEMORY_DEPTH(256),
       	.WAIT_STATE  (0)
 		) uut(
@@ -74,7 +73,7 @@ module apb_tb_top;
   	// Initial state
 	initial begin  
 		// create the test
-        test_base = new("First_test",apb_if);
+        test = new(apb_if);
 		// run the reset
 		apb_if.drive_reset_state();
 	end
@@ -84,7 +83,7 @@ module apb_tb_top;
 
   	// WR/RD
   	initial begin: sim_run
-  		test_base.test_run();
+  		test.test_run();
   	end
   
 	// SIM controller

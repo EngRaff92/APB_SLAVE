@@ -32,12 +32,17 @@
  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-/*
+/* This is the base class test, containing:
+    -> main constructor
+    -> local TRX
+    -> subclasses creation
+    -> main virtual run to be overridden and invoked
+    -> some other utillities
 */
 
 class apb_base_test;
     // local variables
-    string test_name;
+    string test_name = "apb_base_test";
 
     // local transaction
     rand apb_item test_trx;
@@ -45,19 +50,24 @@ class apb_base_test;
     // declare the environment
     apb_env#(apb_item) environment;
     
+    // declare the local generator pointer
+    apb_trx_generator#(apb_item) u_gen;
+
     // local interface
     virtual apb_interface#(REG_WIDTH) apb_test_if;
   
     // constructor
-    function new(input string name, virtual apb_interface#(REG_WIDTH) test_if_h);
+    function new(virtual apb_interface#(REG_WIDTH) test_if_h);
         // Create the Environment
         environment         = new("apb_env",test_if_h);
         // link the interface
         this.apb_test_if    = test_if_h;
+        // Link the generator
+        u_gen               = environment.generator;
     endfunction // new
 
     // Randomize
-    task randomize_trx();
+    task randomize_test_trx();
         // create
         test_trx = new("test_trx");
         // Randomize
@@ -70,20 +80,15 @@ class apb_base_test;
         // randomize first
         if(randomize_from_test) randomize_trx();
         // generate the TRX
-        environment.generator.apb_gen_trx();
+        u_gen.apb_gen_trx();
     endtask // invoke_gen
 
-    // Test run
-    task test_run();
-        // Info
-        apb_print("Test Base Running",LOW,INFO);
+    // Test run extend this one in order to customize the test to be ran
+    virtual task test_run();
         // wait for reset 
         wait(apb_test_if.rst_done.triggered);
         apb_print("RESET done",LOW,INFO);
-        // Run everything
+        // Run all sub components
         environment.env_run();
-        repeat(20) invoke_gen();
-        if(environment.generator.trx_cnt == 20)
-            ->>apb_test_if.sim_done;
     endtask // test_run
 endclass // apb_base_test

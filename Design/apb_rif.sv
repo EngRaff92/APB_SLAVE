@@ -131,8 +131,9 @@ module apb_rif #(
   		data_status_1_dec = 0;
     	data_status_2_dec = 0;
     	data_status_3_dec = 0;
+    	error_access      = 0;
     	// Select using the address
-    	case (rif_addr) begin
+    	case (rif_addr) 
     		`register_data1: 					begin data_1_dec = 1; end
     		`register_data2: 					begin data_2_dec = 1; end
     		`register_data3: 					begin data_3_dec = 1; end
@@ -144,57 +145,73 @@ module apb_rif #(
     			if(ERROUT_IF_NOT_ACCESS)	error_access = 1;
     			else 										 	error_access = 0;
     		end
-    	end
+    	endcase
   	end
 
     // Register posedge and Access
     always_ff @(posedge rif_clk or posedge rif_arst) begin : proc_reg
       if(rif_arst) begin
-        error_handler  	<= '0;
-        rif_rdata				<= '0;
+        rif_rdata			<= '0;
+        // Init only HW = R registers
+      	data_1 				<= '0; 	
+   	 	  data_2 				<= '0;
+    	  data_3 				<= '0;
       end 
       else begin: reg_decoder
       	// Logic for HW = R and SW = RW
       	if(data_1_dec) begin
           if(wr_rq) begin
           	data_1 					<= rif_wdata;
-          	error_handler 	<= 1'b0;
           end
           else if(rd_rq) begin
           	rif_rdata    		<= data_1;
-        		error_handler 	<= 1'b0;
         	end	
       	end 
       	else if(data_2_dec) begin
           if(wr_rq) begin
           	data_2 					<= rif_wdata;
-          	error_handler 	<= 1'b0;
           end
           else if(rd_rq) begin
           	rif_rdata    		<= data_2;
-        		error_handler 	<= 1'b0;
         	end	      		
       	end
       	else if(data_3_dec) begin
           if(wr_rq) begin
           	data_3 					<= rif_wdata;
-          	error_handler 	<= 1'b0;
           end
           else if(rd_rq) begin
           	rif_rdata    		<= data_3;
-        		error_handler 	<= 1'b0;
         	end	      		
       	end
       	else if(write_enable_dec) begin
           if(wr_rq) begin
           	write_enable  	<= rif_wdata;
-          	error_handler 	<= 1'b0;
           end
           else if(rd_rq) begin
           	rif_rdata    		<= write_enable;
-        		error_handler 	<= 1'b0;
         	end	       		
       	end
+      	// Logic for HW = W and SW = RO
+      	else if(data_status_1_dec) begin
+          if(rd_rq) begin
+          	rif_rdata    		<= data_status_1;
+        	end	      		
+      	end 
+      	else if(data_status_2_dec) begin
+					if(rd_rq) begin
+          	rif_rdata    		<= data_status_2;
+        	end	        		
+      	end
+      	else if(data_status_3_dec) begin
+					if(rd_rq) begin
+          	rif_rdata    		<= data_status_3;
+        	end	        		
+      	end
+      end
+    end
+
+    // check the error using COMBO logic to avoiud being missed by the register
+    always_comb
       	// Logic for HW = W and SW = RO
       	else if(data_status_1_dec) begin
           if(wr_rq) begin
@@ -223,20 +240,18 @@ module apb_rif #(
         		error_handler 	<= 1'b0;
         	end	        		
       	end
-      end
-    end
 
-    // assign the Error
-    assign rif_error = error_handler | error_access;
+    // assign the Error output
+    assign rif_error = rif_cs ? (error_handler | error_access) : '0;
 
     // Assign the ready signal
     assign rif_ready = &(regsistered_request);
 
     // Assignements for HW = R policy
-    assign write_enable_out	= write_enable
-    assign data_1_out				= data_1;
-    assign data_2_out				= data_2;
-    assign data_3_out				= data_3;
+    assign write_enable_out	= rif_cs ? write_enable : '0;
+    assign data_1_out				= rif_cs ? data_1 : '0;
+    assign data_2_out				= rif_cs ? data_2 : '0;
+    assign data_3_out				= rif_cs ? data_3 : '0;
 
     // Assignements for HW = W policy
     assign data_status_1 	= data_status_1_in; 

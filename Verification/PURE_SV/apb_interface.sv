@@ -68,10 +68,36 @@ interface apb_interface#(
 
     // Clocking block for slave
     clocking slave_cb @(posedge apb_clock);
+        // We assume only 1 simulation step while driving and sampling
+        default input  #step;   // 1 time step to be sampled after the clock edge
+        default output #step;   // 1 time step to be driver before the clock edge
+        // Output ports of slave
+        input prdata;
+        input pslverror;
+        input pready;
+        // Input ports of slave
+        output penable;
+        output pwrite;
+        output psel;
+        output paddr;
+        output pwdata;
     endclocking
 
     // Clocking block for Monitor
     clocking monitor_cb @(posedge apb_clock);
+        // We assume only 1 simulation step while driving and sampling
+        default input  #step;   // 1 time step to be sampled after the clock edge
+        default output #step;   // 1 time step to be driver before the clock edge
+        // Output ports of slave
+        input prdata;
+        input pslverror;
+        input pready;
+        // Input ports of slave
+        output penable;
+        output pwrite;
+        output psel;
+        output paddr;
+        output pwdata;       
     endclocking
 
     // Modports
@@ -96,19 +122,19 @@ interface apb_interface#(
         if(~pready)
             @(posedge pready);
         apb_print($sformatf("Start WR TRX at address: %0h with Data: %0h",addr,wdata),HIGH,INFO);
-        psel        = 1;
-        paddr       = addr;
-        pwrite      = 1;
-        pwdata      = wdata;
-        @(posedge apb_clock);
-        penable     = 1;
+        slave_cb.psel        <= 1;
+        slave_cb.paddr       <= addr;
+        slave_cb.pwrite      <= 1;
+        slave_cb.pwdata      <= wdata;
+        @slave_cb;
+        slave_cb.penable     <= 1;
         // Transfer END
-        @(posedge apb_clock);
-        psel        = 0;
-        penable     = 0;
-        pwrite      = 0;
+        @slave_cb;
+        slave_cb.psel        <= 0;
+        slave_cb.penable     <= 0;
+        slave_cb.pwrite      <= 0;
         // RIF access END
-        @(posedge apb_clock);
+        @slave_cb;
         if(~pready)
             @(posedge pready);
     endtask
@@ -118,19 +144,19 @@ interface apb_interface#(
         if(~pready)
             @(posedge pready);
         apb_print($sformatf("Start RD TRX at address: %0h",addr),HIGH,INFO);
-        psel        = 1;
-        paddr       = addr;
-        pwrite      = 'h0;
-        pwdata      = 'h0;
-        @(posedge apb_clock);
-        penable     = 1;
+        slave_cb.psel        <= 1;
+        slave_cb.paddr       <= addr;
+        slave_cb.pwrite      <= 'h0;
+        slave_cb.pwdata      <= 'h0;
+        @slave_cb;
+        slave_cb.penable     <= 1;
         // Transfer END
-        @(posedge apb_clock);
-        psel        = 0;
-        penable     = 0;
-        @(posedge apb_clock);
+        @slave_cb;
+        slave_cb.psel        <= 0;
+        slave_cb.penable     <= 0;
+        @slave_cb;
         // RIF access END
-        rdata       = prdata;
+        rdata                = slave_cb.prdata;
         if(~pready)
             @(posedge pready);
         apb_print($sformatf("Data read at addr: %0h is: %0h", addr,rdata),HIGH,INFO);

@@ -46,34 +46,34 @@
 module apb_decoder
 	#(
 		parameter N_OF_SLAVES 		= 'h8,
-		parameter SLV0_START_ADDR 	= 'h0,
+		parameter SLV0_START_ADDR = 'h0,
 		parameter SLV0_END_ADDR 	= 'h0,
-		parameter SLV1_START_ADDR 	= 'h0,
+		parameter SLV1_START_ADDR = 'h0,
 		parameter SLV1_END_ADDR 	= 'h0,
-		parameter SLV2_START_ADDR 	= 'h0,
+		parameter SLV2_START_ADDR = 'h0,
 		parameter SLV2_END_ADDR 	= 'h0,
-		parameter SLV3_START_ADDR 	= 'h0,
+		parameter SLV3_START_ADDR = 'h0,
 		parameter SLV3_END_ADDR 	= 'h0,
-		parameter SLV4_START_ADDR 	= 'h0,
+		parameter SLV4_START_ADDR = 'h0,
 		parameter SLV4_END_ADDR 	= 'h0,
-		parameter SLV5_START_ADDR 	= 'h0,
+		parameter SLV5_START_ADDR = 'h0,
 		parameter SLV5_END_ADDR 	= 'h0,
-		parameter SLV6_START_ADDR 	= 'h0,
+		parameter SLV6_START_ADDR = 'h0,
 		parameter SLV6_END_ADDR 	= 'h0,
-		parameter SLV7_START_ADDR 	= 'h0,
+		parameter SLV7_START_ADDR = 'h0,
 		parameter SLV7_END_ADDR 	= 'h0,
-		parameter DEC_WIDTH 		= 32
+		parameter DEC_WIDTH 		  = 32
 	)
 	(
-		input logic [DEC_WIDTH-1:0] 			dec_mst_addr,							// Address from Master (PADDR)
-		input logic 							dec_mst_wr_rd_en,						// write or read operation from Master (PWRITE)
-		input logic 							dec_mst_cs,								// chip select from Master (PENABLE)
-		input logic 							dec_slvx_ready[N_OF_SLAVES:0],		    // ready signal from slave 0
-        input logic [DEC_WIDTH-1:0] 			dec_slvx_rd_data[N_OF_SLAVES:1],		// read data from slave 0
-		output logic [N_OF_SLAVES-1:0] 			dec_slv_cs,								// chip select which identifies the slave selected (ONE HOT)
-		output logic [DEC_WIDTH-1:0] 			dec_mst_rdata,							// valid read data from selected slave
-		output logic 							dec_slv_ready,							// valid ready from selected slave
-		output logic 							dec_slv_wr_rd_en						// Write or read enable to be rooted to the proper slave
+		input logic [DEC_WIDTH-1:0] 		dec_mst_addr,												// Address from Master (PADDR)
+		input logic 										dec_mst_wr_rd_en,										// write or read operation from Master (PWRITE)
+		input logic 										dec_mst_cs,													// chip select from Master (PENABLE)
+		input logic 										dec_slvx_ready[N_OF_SLAVES:0],		  // ready signal from slave 0
+    input logic [DEC_WIDTH-1:0] 		dec_slvx_rd_data[N_OF_SLAVES:0],		// read data from slave 0
+		output logic [N_OF_SLAVES-1:0] 	dec_slv_cs,													// chip select which identifies the slave selected (ONE HOT)
+		output logic [DEC_WIDTH-1:0] 		dec_mst_rdata,											// valid read data from selected slave
+		output logic 										dec_slv_ready,											// valid ready from selected slave
+		output logic 										dec_slv_wr_rd_en										// Write or read enable to be rooted to the proper slave
 		);
   
 	// Local parameters and checks
@@ -121,48 +121,50 @@ module apb_decoder
       if(internal_decode[MAX_N_OF_SLVS]) 
         dec_mst_rdata = '0;
       else if(internal_decode[0])
-        dec_mst_rdata = dec_slvx_rd_data[1];
+        dec_mst_rdata = dec_slvx_rd_data[0];
       else if(internal_decode[1])
-        dec_mst_rdata = dec_slvx_rd_data[2];
+        dec_mst_rdata = dec_slvx_rd_data[1];
       else if(internal_decode[2])
-        dec_mst_rdata = dec_slvx_rd_data[3];
+        dec_mst_rdata = dec_slvx_rd_data[2];
       else if(internal_decode[3])
-        dec_mst_rdata = dec_slvx_rd_data[4];
+        dec_mst_rdata = dec_slvx_rd_data[3];
       else if(internal_decode[4])
-        dec_mst_rdata = dec_slvx_rd_data[5];
+        dec_mst_rdata = dec_slvx_rd_data[4];
       else if(internal_decode[5])
-        dec_mst_rdata = dec_slvx_rd_data[6];
+        dec_mst_rdata = dec_slvx_rd_data[5];
       else if(internal_decode[6])
-        dec_mst_rdata = dec_slvx_rd_data[7];
+        dec_mst_rdata = dec_slvx_rd_data[6];
       else if(internal_decode[7])
-        dec_mst_rdata = dec_slvx_rd_data[8];
+        dec_mst_rdata = dec_slvx_rd_data[7];
     end
   	
   	always_comb begin
       if(internal_decode[MAX_N_OF_SLVS]) 
         dec_slv_ready = '0;
       else if(internal_decode[0])
-        dec_slv_ready = dec_slvx_ready[1];
+        dec_slv_ready = dec_slvx_ready[0];
       else if(internal_decode[1])
-        dec_slv_ready = dec_slvx_ready[2];
+        dec_slv_ready = dec_slvx_ready[1];
       else if(internal_decode[2])
-        dec_slv_ready = dec_slvx_ready[3];
+        dec_slv_ready = dec_slvx_ready[2];
       else if(internal_decode[3])
-        dec_slv_ready = dec_slvx_ready[4];
+        dec_slv_ready = dec_slvx_ready[3];
       else if(internal_decode[4])
-        dec_slv_ready = dec_slvx_ready[5];
+        dec_slv_ready = dec_slvx_ready[4];
       else if(internal_decode[5])
-        dec_slv_ready = dec_slvx_ready[6];
+        dec_slv_ready = dec_slvx_ready[5];
       else if(internal_decode[6])
-        dec_slv_ready = dec_slvx_ready[7];
+        dec_slv_ready = dec_slvx_ready[6];
       else if(internal_decode[7])
-        dec_slv_ready = dec_slvx_ready[8];
+        dec_slv_ready = dec_slvx_ready[7];
     end
-  
-	logic dbl;
-	logic [31:0] db;
-	assign dbl = dec_slvx_ready[2];
-	assign db = dec_slvx_rd_data[2];
+
+`ifdef DEBUG_XVALUES
+		logic dbl;
+		logic [31:0] db;
+		assign dbl 	= dec_slvx_ready[2];
+		assign db 	= dec_slvx_rd_data[2];
+`endif
 endmodule: apb_decoder
 
 /*

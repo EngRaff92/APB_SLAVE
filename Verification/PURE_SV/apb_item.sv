@@ -41,8 +41,22 @@ class apb_item;
     rand reg_data_t data_wr;
     rand access_t   access_part;
     rand apb_cmd_t  cmd;
+    rand bit        exptected_err;
     reg_data_t      data_rd;
     string          item_name;
+
+    // set of constraints
+    constraint address_before { solve address before exptected_err;};
+
+    constraint error_exp_memory_rif {
+        if((address inside {[`memory_adress_start:`memory_adress_end]}))
+               exptected_err == 0;           
+        else if((address inside {[`regfile_apb_rif:`register_data_status_3]}))
+               exptected_err == 0;
+        else 
+               exptected_err == 1;
+
+    };
 
     // constructor
     function new(input string n);
@@ -56,18 +70,18 @@ class apb_item;
        apb_print($sformatf("Print TRX -> Data Write     %0h: ",data_wr),LOW,INFO);
        apb_print($sformatf("Print TRX -> Access Part    %0s: ",access_part.name()),LOW,INFO);
        apb_print($sformatf("Print TRX -> CMD type       %0s: ",cmd.name()),LOW,INFO);
+       apb_print($sformatf("Print TRX -> EXP_ERR        %0d: ",exptected_err),LOW,INFO);
     endfunction // apb_item_print
     
     // Post randomize
-    //postrandomize function, displaying randomized values of items 
+    // postrandomize function, displaying randomized values of items 
     function void post_randomize();
         this.apb_item_print();
     endfunction
   
     // Deep copy method
     function apb_item do_copy();
-        apb_item _t = new("copy_apb_item");
-        _t = new();
+        apb_item _t     = new("copy_apb_item");
         _t.address      = this.address;
         _t.data_wr      = this.data_wr;
         _t.access_part  = this.access_part;
