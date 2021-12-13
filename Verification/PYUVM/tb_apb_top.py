@@ -1,108 +1,108 @@
-from cocotb.triggers import FallingEdge
+#
+# Icebreaker and IceSugar RSMB5 project - RV32I for Lattice iCE40
+# With complete open-source toolchain flow using:
+# -> yosys 
+# -> icarus verilog
+# -> icestorm project
+#
+# Tests are written in several languages
+# -> Systemverilog Pure Testbench (Vivado)
+# -> UVM testbench (Vivado)
+# -> PyUvm (Icarus)
+# -> Formal either using SVA and PSL (Vivado) or cuncurrent assertions with Yosys
+#
+# Copyright (c) 2021 Raffaele Signoriello (raff.signoriello92@gmail.com)
+#
+# Permission is hereby granted, free of charge, to any person obtaining a 
+# copy of this software and associated documentation files (the "Software"), 
+# to deal in the Software without restriction, including without limitation 
+# the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+# and/or sell copies of the Software, and to permit persons to whom the 
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included 
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
+
+from cocotb.triggers import FallingEdge, RisingEdge
+from cocotb.triggers import Timer
+from cocotb.triggers import Event
 import cocotb
-from cocotb.queue import QueueEmpty
-from tinyalu_uvm import *
 
-"""
-import debugpy
-
-try:
-    listen_host, listen_port = debugpy.listen(("localhost", 5678))
-except Exception as ex:
-    print("EX = ", ex)
-    raise
-cocotb.log.info("Waiting for Python debugger attach"
-                " on {}:{}".format(listen_host, listen_port))
-# Suspend execution until debugger attaches
-debugpy.wait_for_client()
-# Break into debugger for user control
-breakpoint()  # or debugpy.breakpoint() on 3.6 and below
-"""
-
-class CocotbProxy:
+## Main interface
+class apb_interface:
     def __init__(self, dut):
-        self.dut = dut
-        self.driver_queue = UVMQueue(maxsize=1)
-        self.cmd_mon_queue = UVMQueue(maxsize=0)
-        self.result_mon_queue = UVMQueue(maxsize=0)
+        self.dut        = dut
+        self.reset_done = Event("apb_reset_done")
 
-    async def send_op(self, aa, bb, op):
-        await self.driver_queue.put((aa, bb, op))
+    ## task to drive the reset
+    async def apb_reset(self):
+        self.reset_done.clear()
+        await Timer(10, units='ns')
+        self.pclk_en    <= 1;
+        self.dut.prst   <= 0;
+        await Timer(10, units='ns')
+        self.dut.prst   <= 1;
+        await Timer(5, units='ns')
+        self.dut.prst   <= 0;
+        self.reset_done.set()
 
-    async def get_cmd(self):
-        cmd = await self.cmd_mon_queue.get()
-        return cmd
+    ## Task used to read from specific address
+    async def apb_rd(self, address, data_read):
+        if self.dut.pready not 1:
+            await RisingEdge(self.dut.pready)
+        apb_print($sformatf("Start RD TRX at address: %0h",addr),HIGH,INFO);
+        self.dut.psel        <= 1;
+        self.dut.paddr       <= address;
+        self.dut.pwrite      <= 0;
+        self.dut.pwdata      <= 0;
+        await RisingEdge(self.dut.pclk)
+        self.dut.penable     <= 1;
+        ## Transfer END
+        await RisingEdge(self.dut.pclk)
+        self.dut.psel        <= 0;
+        self.dut.penable     <= 0;
+        await RisingEdge(self.dut.pclk)
+        ## RIF access END
+        data_read            <= self.dut.prdata;
+        if self.dut.pready not 1:
+            await RisingEdge(self.dut.pready)
+        apb_print($sformatf("Data read at addr: %0h is: %0h", addr,rdata),HIGH,INFO);
 
-    async def get_result(self):
-        result = await self.result_mon_queue.get()
-        return result
+    ## Task used to write at specific address
+    async def apb_wr(self, address, data_write):
+        if self.dut.pready not 1:
+            await RisingEdge(self.dut.pready)
+        apb_print($sformatf("Start WR TRX at address: %0h with Data: %0h",addr,wdata),HIGH,INFO);
+        self.dut.psel        <= 1;
+        self.dut.paddr       <= address;
+        self.dut.pwrite      <= 1;
+        self.dut.pwdata      <= data_write;
+        await RisingEdge(self.dut.pclk)
+        self.dut.penable     <= 1;
+        ## Transfer END
+        await RisingEdge(self.dut.pclk)
+        self.dut.psel        <= 0;
+        self.dut.penable     <= 0;
+        self.dut.pwrite      <= 0;
+        ## RIF access END
+        await RisingEdge(self.dut.pclk)
+        if self.dut.pready not 1:
+            await RisingEdge(self.dut.pready)
 
-    async def reset(self):
-        await FallingEdge(self.dut.clk)
-        self.dut.reset_n <= 0
-        self.dut.A <= 0
-        self.dut.B <= 0
-        self.dut.op <= 0
-        await FallingEdge(self.dut.clk)
-        self.dut.reset_n <= 1
-        await FallingEdge(self.dut.clk)
-
-    async def driver_bfm(self):
-        self.dut.start <= 0
-        self.dut.A <= 0
-        self.dut.B <= 0
-        self.dut.op <= 0
-        while True:
-            await FallingEdge(self.dut.clk)
-            if self.dut.start.value == 0 and self.dut.done.value == 0:
-                try:
-                    (aa, bb, op) = self.driver_queue.get_nowait()
-                    self.dut.A = aa
-                    self.dut.B = bb
-                    self.dut.op = op
-                    self.dut.start = 1
-                except QueueEmpty:
-                    pass
-            elif self.dut.start == 1:
-                if self.dut.done.value == 1:
-                    self.dut.start = 0
-
-    async def cmd_mon_bfm(self):
-        prev_start = 0
-        while True:
-            await FallingEdge(self.dut.clk)
-            try:
-                start = int(self.dut.start.value)
-            except ValueError:
-                start = 0
-            if start == 1 and prev_start == 0:
-                self.cmd_mon_queue.put_nowait((int(self.dut.A),
-                                               int(self.dut.B),
-                                               int(self.dut.op)))
-            prev_start = start
-
-    async def result_mon_bfm(self):
-        prev_done = 0
-        while True:
-            await FallingEdge(self.dut.clk)
-            try:
-                done = int(self.dut.done)
-            except ValueError:
-                done = 0
-
-            if done == 1 and prev_done == 0:
-                result = int(self.dut.result)
-                self.result_mon_queue.put_nowait(result)
-            prev_done = done
-
-
+## Main Test
 @cocotb.test()
-async def test_alu(dut):
-    proxy = CocotbProxy(dut)
-    ConfigDB().set(None, "*", "PROXY", proxy)
-    ConfigDB().set(None, "*", "DUT", dut)
-    await proxy.reset()
-    cocotb.fork(proxy.driver_bfm())
-    cocotb.fork(proxy.cmd_mon_bfm())
-    cocotb.fork(proxy.result_mon_bfm())
-    await uvm_root().run_test("AluTest")
+async def test_apb_general_read_write(dut):
+    apb_if = apb_interface(dut)
+##    ConfigDB().set(None, "*", "apb_if", apb_interface)
+##    ConfigDB().set(None, "*", "dut", dut)
+    await apb_interface.apb_reset()
+    #await uvm_root().run_test("apb_test_memory_rd")
