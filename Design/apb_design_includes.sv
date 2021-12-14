@@ -39,7 +39,9 @@
 // Defines and Parameters for DESIGN
 // ########################################################################################################
 // Include the Auto generated sets of parameters
+`ifdef ICARUS
 `include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Apb_Reggen/output_all/apb_reg_param.svh"
+`endif
 
 // SLV checker
 `define SLV0  1<<0

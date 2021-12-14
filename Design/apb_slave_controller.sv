@@ -37,7 +37,9 @@
 
 */
 
+`ifndef ICARUS
 `include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Design/apb_design_includes.sv"
+`endif
 
 module apb_slave_controller #(
     // Parameter Declaration and propagation

@@ -38,7 +38,9 @@
  * -> functionalities.
 */
 
+`ifndef ICARUS
 `include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Design/apb_design_includes.sv"
+`endif
 
 // Main Module
 module apb_rif #(

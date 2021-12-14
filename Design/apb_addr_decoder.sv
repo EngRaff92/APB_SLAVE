@@ -40,7 +40,9 @@
 	The parametrized version of such design would get the number of slaves as input and the start and end address value
 	then it generates the proper decode signal (making sure is one hot to avoid muliple erroneous slave selection)
 */
+`ifndef ICARUS
 `include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Design/apb_design_includes.sv"
+`endif
 
 // Main Module
 module apb_decoder
@@ -79,7 +81,7 @@ module apb_decoder
 	// Local parameters and checks
 	localparam MAX_N_OF_SLVS = 8;
 	initial begin
-		param_checker: assert(N_OF_SLAVES <= MAX_N_OF_SLVS) else $error("Number of slaves used is greater the supported number");
+		assert(N_OF_SLAVES <= MAX_N_OF_SLVS) else $error("Number of slaves used is greater the supported number");
 	end
 
 	// Main decoder logic the decode is made by 1 bit more to detect no SLV selected

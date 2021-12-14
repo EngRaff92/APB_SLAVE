@@ -35,74 +35,105 @@
 from cocotb.triggers import FallingEdge, RisingEdge
 from cocotb.triggers import Timer
 from cocotb.triggers import Event
+from cocotb.triggers import Join, First, Combine
+from cocotb.clock import Clock
+from cocotb.result import TestFailure, ReturnValue
 import cocotb
 
 ## Main interface
 class apb_interface:
+    ## Init
     def __init__(self, dut):
         self.dut        = dut
         self.reset_done = Event("apb_reset_done")
 
+    ## clock generation
+    async def wait_clock(self,cycles):
+        """wait for clock pulses"""
+        for cycle in range(cycles):
+            await RisingEdge(self.dut.pclk)
+
+    ## Task used to set a known state (only used over reset)
+    async def set_known_state(self):
+        self.dut.psel.value     = 0
+        self.dut.paddr.value    = 0
+        self.dut.pwrite.value   = 0
+        self.dut.pwdata.value   = 0
+        self.dut.penable.value  = 0
+
     ## task to drive the reset
     async def apb_reset(self):
+        ## clear out the event
         self.reset_done.clear()
-        await Timer(10, units='ns')
-        self.pclk_en    <= 1;
-        self.dut.prst   <= 0;
-        await Timer(10, units='ns')
-        self.dut.prst   <= 1;
+        ## set the RTL to a known state
+        await self.set_known_state()
+        ## Issue a reset routine
+        self.dut.pclk_en.value  = 1
+        self.dut.prst.value     = 0
         await Timer(5, units='ns')
-        self.dut.prst   <= 0;
+        self.dut.pclk_en.value  = 1
+        self.dut.prst.value     = 0
+        await Timer(5, units='ns')
+        self.dut.prst.value     = 1
+        await Timer(5, units='ns')
+        self.dut.prst.value     = 0
+        ## Set the event
         self.reset_done.set()
 
     ## Task used to read from specific address
     async def apb_rd(self, address, data_read):
-        if self.dut.pready not 1:
+        if self.dut.pready.value != 1:
             await RisingEdge(self.dut.pready)
-        apb_print($sformatf("Start RD TRX at address: %0h",addr),HIGH,INFO);
-        self.dut.psel        <= 1;
-        self.dut.paddr       <= address;
-        self.dut.pwrite      <= 0;
-        self.dut.pwdata      <= 0;
+        dut._log.info("Start WR TRX at address: {} with Data: {}".format(addr,wdata))
+        self.dut.psel.value     = 1
+        self.dut.paddr.value    = address
+        self.dut.pwrite.value   = 0
+        self.dut.pwdata.value   = 0
         await RisingEdge(self.dut.pclk)
-        self.dut.penable     <= 1;
+        self.dut.penable.value  = 1
         ## Transfer END
         await RisingEdge(self.dut.pclk)
-        self.dut.psel        <= 0;
-        self.dut.penable     <= 0;
+        self.dut.psel.value     = 0
+        self.dut.penable.value  = 0
         await RisingEdge(self.dut.pclk)
         ## RIF access END
-        data_read            <= self.dut.prdata;
-        if self.dut.pready not 1:
+        data_read               = self.dut.prdata.value
+        if self.dut.pready.value != 1:
             await RisingEdge(self.dut.pready)
-        apb_print($sformatf("Data read at addr: %0h is: %0h", addr,rdata),HIGH,INFO);
+        dut._log.info("Start WR TRX at address: {} with Data: {}".format(addr,wdata))
 
     ## Task used to write at specific address
     async def apb_wr(self, address, data_write):
-        if self.dut.pready not 1:
+        if self.dut.pready.value != 1:
             await RisingEdge(self.dut.pready)
-        apb_print($sformatf("Start WR TRX at address: %0h with Data: %0h",addr,wdata),HIGH,INFO);
-        self.dut.psel        <= 1;
-        self.dut.paddr       <= address;
-        self.dut.pwrite      <= 1;
-        self.dut.pwdata      <= data_write;
+        #dut._log.info("Start WR TRX at address: {} with Data: {}".format(addr,wdata))
+        self.dut.psel.value     = 1
+        self.dut.paddr.value    = address
+        self.dut.pwrite.value   = 1
+        self.dut.pwdata.value   = data_write
         await RisingEdge(self.dut.pclk)
-        self.dut.penable     <= 1;
+        self.dut.penable.value  = 1
         ## Transfer END
         await RisingEdge(self.dut.pclk)
-        self.dut.psel        <= 0;
-        self.dut.penable     <= 0;
-        self.dut.pwrite      <= 0;
+        self.dut.psel.value     = 0
+        self.dut.penable .value = 0
+        self.dut.pwrite.value   = 0
         ## RIF access END
         await RisingEdge(self.dut.pclk)
-        if self.dut.pready not 1:
+        if self.dut.pready.value != 1:
             await RisingEdge(self.dut.pready)
 
 ## Main Test
 @cocotb.test()
 async def test_apb_general_read_write(dut):
     apb_if = apb_interface(dut)
-##    ConfigDB().set(None, "*", "apb_if", apb_interface)
-##    ConfigDB().set(None, "*", "dut", dut)
-    await apb_interface.apb_reset()
-    #await uvm_root().run_test("apb_test_memory_rd")
+    dut._log.info("Running Reset")
+    reset_coro = cocotb.start_soon(apb_if.apb_reset())
+    dut._log.info("Running Clock")
+    ## clock_coro = cocotb.start_soon(apb_if.run_clock(10))
+    clock_coro = cocotb.start_soon(Clock(dut.pclk, 2, units='ns').start())
+    ## Wait for some clock cycles
+    await reset_coro
+    await apb_if.wait_clock(20)
+    await apb_if.apb_wr(5,5)
+    await apb_if.wait_clock(2)
