@@ -66,7 +66,7 @@ class apb_interface:
         ## clear out the event
         self.reset_done.clear()
         ## set the RTL to a known state
-        await self.set_known_state()
+        ## await self.set_known_state()
         ## Issue a reset routine
         self.dut.pclk_en.value  = 1
         self.dut.prst.value     = 0
@@ -135,5 +135,5 @@ async def test_apb_general_read_write(dut):
     ## Wait for some clock cycles
     await reset_coro
     await apb_if.wait_clock(20)
-    await apb_if.apb_wr(5,5)
+    #await apb_if.apb_wr(5,5)
     await apb_if.wait_clock(2)

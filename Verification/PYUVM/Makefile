@@ -39,10 +39,12 @@ CURRENT_DIR 			= $(shell pwd)
 COCOTB_REDUCED_LOG_FMT 	= True
 SIM 					?= icarus
 #VERILOG_SOURCES 		= $(wildcard ./*.sv)
-VERILOG_SOURCES 		= $(wildcard ${CURRENT_DIR}/../../Design/*.sv)
+#VERILOG_SOURCES 		+= /Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Apb_Reggen/output_all/apb_reg_param.svh
+VERILOG_SOURCES 		+= $(wildcard ${CURRENT_DIR}/../../Design/*.sv) 
 MODULE 					:= tb_apb_top
-TOPLEVEL 				:= apb_controller
-TOPLEVEL_LANG			=verilog
+#TOPLEVEL 				:= apb_controller
+TOPLEVEL 				:= apb_slave_controller
+TOPLEVEL_LANG			= verilog
 COCOTB_HDL_TIMEUNIT		= 1ns
 COCOTB_HDL_TIMEPRECISION= 1ns
 include $(shell cocotb-config --makefiles)/Makefile.sim
