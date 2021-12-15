@@ -40,9 +40,8 @@
 	The parametrized version of such design would get the number of slaves as input and the start and end address value
 	then it generates the proper decode signal (making sure is one hot to avoid muliple erroneous slave selection)
 */
-`ifndef ICARUS
-`include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Design/apb_design_includes.sv"
-`endif
+// Main inclusion
+`include "./apb_design_includes.sv"
 
 // Main Module
 module apb_decoder
@@ -70,8 +69,8 @@ module apb_decoder
 		input logic [DEC_WIDTH-1:0] 		dec_mst_addr,												// Address from Master (PADDR)
 		input logic 										dec_mst_wr_rd_en,										// write or read operation from Master (PWRITE)
 		input logic 										dec_mst_cs,													// chip select from Master (PENABLE)
-		input logic 										dec_slvx_ready[N_OF_SLAVES:0],		  // ready signal from slave 0
-    input logic [DEC_WIDTH-1:0] 		dec_slvx_rd_data[N_OF_SLAVES:0],		// read data from slave 0
+		input logic 										dec_slvx_ready[N_OF_SLAVES:0],		  // ready signal from slave 0 to the end 
+    input logic [DEC_WIDTH-1:0] 		dec_slvx_rd_data[N_OF_SLAVES:0],		// read data from slave 0 to the end
 		output logic [N_OF_SLAVES-1:0] 	dec_slv_cs,													// chip select which identifies the slave selected (ONE HOT)
 		output logic [DEC_WIDTH-1:0] 		dec_mst_rdata,											// valid read data from selected slave
 		output logic 										dec_slv_ready,											// valid ready from selected slave
@@ -119,45 +118,49 @@ module apb_decoder
 	assign dec_slv_wr_rd_en = dec_mst_wr_rd_en;
   	
   	// set the RD_DATA according to the slave selection make sure to not use the MSB of internal decode
+  	// Note do nto use bit selection with costant: will avoid this error
+  	// sorry: constant selects in always_* processes are not currently supported (all bits will be included).  	
   	always_comb begin
-      if(internal_decode[MAX_N_OF_SLVS]) 
+      if(internal_decode == `NSLV) 
         dec_mst_rdata = '0;
-      else if(internal_decode[0])
+      else if(internal_decode == `SLV0)
         dec_mst_rdata = dec_slvx_rd_data[0];
-      else if(internal_decode[1])
+      else if(internal_decode == `SLV1)
         dec_mst_rdata = dec_slvx_rd_data[1];
-      else if(internal_decode[2])
+      else if(internal_decode == `SLV2)
         dec_mst_rdata = dec_slvx_rd_data[2];
-      else if(internal_decode[3])
+      else if(internal_decode == `SLV3)
         dec_mst_rdata = dec_slvx_rd_data[3];
-      else if(internal_decode[4])
+      else if(internal_decode == `SLV4)
         dec_mst_rdata = dec_slvx_rd_data[4];
-      else if(internal_decode[5])
+      else if(internal_decode == `SLV5)
         dec_mst_rdata = dec_slvx_rd_data[5];
-      else if(internal_decode[6])
+      else if(internal_decode == `SLV6)
         dec_mst_rdata = dec_slvx_rd_data[6];
-      else if(internal_decode[7])
+      else if(internal_decode == `SLV7)
         dec_mst_rdata = dec_slvx_rd_data[7];
     end
   	
+  	// Note do nto use bit selection with costant: will avoid this error
+  	// sorry: constant selects in always_* processes are not currently supported (all bits will be included).
   	always_comb begin
-      if(internal_decode[MAX_N_OF_SLVS]) 
+      if(internal_decode == `NSLV) 
         dec_slv_ready = '0;
-      else if(internal_decode[0])
+      else if(internal_decode == `SLV0)
         dec_slv_ready = dec_slvx_ready[0];
-      else if(internal_decode[1])
+      else if(internal_decode == `SLV1)
         dec_slv_ready = dec_slvx_ready[1];
-      else if(internal_decode[2])
+      else if(internal_decode == `SLV2)
         dec_slv_ready = dec_slvx_ready[2];
-      else if(internal_decode[3])
+      else if(internal_decode == `SLV3)
         dec_slv_ready = dec_slvx_ready[3];
-      else if(internal_decode[4])
+      else if(internal_decode == `SLV4)
         dec_slv_ready = dec_slvx_ready[4];
-      else if(internal_decode[5])
+      else if(internal_decode == `SLV5)
         dec_slv_ready = dec_slvx_ready[5];
-      else if(internal_decode[6])
+      else if(internal_decode == `SLV6)
         dec_slv_ready = dec_slvx_ready[6];
-      else if(internal_decode[7])
+      else if(internal_decode == `SLV7)
         dec_slv_ready = dec_slvx_ready[7];
     end
 

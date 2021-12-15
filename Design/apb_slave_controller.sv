@@ -37,8 +37,21 @@
 
 */
 
-`ifndef ICARUS
-`include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Design/apb_design_includes.sv"
+// Main inclusion
+`include "./apb_design_includes.sv"
+
+// If not here ICARUS will fire an error due to null macro registered
+`ifdef COCOTB_SIM
+`define regfile_apb_rif  32'h0
+`define register_data1  32'h0
+`define register_data2  32'h4
+`define register_data3  32'h8
+`define register_write_enable  32'hc
+`define register_data_status_1  32'h10
+`define register_data_status_2  32'h14
+`define register_data_status_3  32'h18
+`define memory_adress_start  32'h100
+`define memory_adress_end  32'h4fc
 `endif
 
 module apb_slave_controller #(
@@ -64,6 +77,14 @@ module apb_slave_controller #(
     output logic                pslverror,  // Give error in few specific conditions only 
     output logic                pready      // Is controlled by the slave and claims if the specifc slave is busy or not
 );
+    // If COCOTB is enabled then we need to dump files unless we wanna use a separate TB_TOP (TODO)
+    `ifdef COCOTB_SIM
+    initial begin
+      $dumpfile("apb_slave_controller.vcd");
+      $dumpvars(0);
+    end
+    `endif
+
     // Internal signals
     logic [WAIT_STATE:0] cnt;
     logic g_clk;
@@ -256,13 +277,16 @@ module apb_slave_controller #(
       );
 
     // Error Generator if we try to access the DATA register while WRITE EN is 0
+    logic [1:0] address_selector;
+    assign address_selector = paddr[3:2]; // grab the selector
     always_comb begin
+      // Run the ERROR checking
       if(paddr >= `register_data1 && paddr <= `register_data3) begin
-        if((paddr[3:2] == 2'b00) && write_enable_out[0] && pwrite)
+        if((address_selector == 2'b00) && (write_enable_out == 32'h0) && pwrite)
           data_status_1_in = 1'b1;
-        else if((paddr[3:2] == 2'b01) && write_enable_out[1] && pwrite)  
+        else if((address_selector == 2'b01) && (write_enable_out == 32'h2) && pwrite)  
           data_status_2_in = 1'b1;
-        else if((paddr[3:2] == 2'b10) && write_enable_out[2] && pwrite)
+        else if((address_selector == 2'b10) && (write_enable_out == 32'h5) && pwrite)
           data_status_3_in = 1'b1;
         else begin
           data_status_1_in = '0;

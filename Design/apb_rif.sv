@@ -38,8 +38,21 @@
  * -> functionalities.
 */
 
-`ifndef ICARUS
-`include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Design/apb_design_includes.sv"
+// Main Inclusion
+`include "./apb_design_includes.sv"
+
+// If not here ICARUS will fire an error due to null macro registered
+`ifdef COCOTB_SIM
+`define regfile_apb_rif  32'h0
+`define register_data1  32'h0
+`define register_data2  32'h4
+`define register_data3  32'h8
+`define register_write_enable  32'hc
+`define register_data_status_1  32'h10
+`define register_data_status_2  32'h14
+`define register_data_status_3  32'h18
+`define memory_adress_start  32'h100
+`define memory_adress_end  32'h4fc
 `endif
 
 // Main Module
@@ -215,31 +228,31 @@ module apb_rif #(
     // check the error using COMBO logic to avoiud being missed by the register
     always_comb
       	// Logic for HW = W and SW = RO
-      	else if(data_status_1_dec) begin
+      	if(data_status_1_dec) begin
           if(wr_rq) begin
-          	error_handler 	<= 1'b1;
+          	error_handler 	= 1'b1;
           end
           else if(rd_rq) begin
-          	rif_rdata    		<= data_status_1;
-        		error_handler 	<= 1'b0;
+          	rif_rdata    		= data_status_1;
+        		error_handler 	= 1'b0;
         	end	      		
       	end 
       	else if(data_status_2_dec) begin
           if(wr_rq) begin
-          	error_handler 	<= 1'b1;
+          	error_handler 	= 1'b1;
           end
           else if(rd_rq) begin
-          	rif_rdata    		<= data_status_2;
-        		error_handler 	<= 1'b0;
+          	rif_rdata    		= data_status_2;
+        		error_handler 	= 1'b0;
         	end	        		
       	end
       	else if(data_status_3_dec) begin
           if(wr_rq) begin
-          	error_handler 	<= 1'b1;
+          	error_handler 	= 1'b1;
           end
           else if(rd_rq) begin
-          	rif_rdata    		<= data_status_3;
-        		error_handler 	<= 1'b0;
+          	rif_rdata    		= data_status_3;
+        		error_handler 	= 1'b0;
         	end	        		
       	end
 
@@ -260,106 +273,3 @@ module apb_rif #(
     assign data_status_2 	= data_status_2_in;
     assign data_status_3 	= data_status_3_in;
 endmodule : apb_rif
-
-/*
-      	case(reg_dec)
-          // Wr	ite modifier register
-		    	'd0:	begin 
-			            if(wr_rq) begin
-			            	Write_Reg_En 		<= rif_wdata;
-			            	error_handler 	<= 1'b0;
-			            end
-			            else if(rd_rq) begin
-			              	rif_rdata    		<= Write_Reg_En;
-			              	error_handler 	<= 1'b0;
-			            end
-		      			end 
-					// Status Register
-					'd1:  	begin 
-								if(rd_rq) begin	
-									rif_rdata  		<= Status_1; 
-									error_handler 	<= 1'b0;
-								end
-								else if(wr_rq) begin
-									error_handler 	<= 1'b1;
-									rif_rdata 		<= 'h0;
-								end		
-							end
-					'd2:  	begin 
-								if(rd_rq) begin
-									error_handler 	<= 1'b0;
-									rif_rdata  		<= Status_2; 
-								end
-								else if(wr_rq) begin
-									error_handler 	<= 1'b1;
-									rif_rdata 		<= 'h0;
-								end							
-							end
-					'd3:  	begin 
-								if(rd_rq) begin
-									rif_rdata  		<= Status_3;
-									error_handler 	<= 1'b0;
-								end	 
-								else if(wr_rq) begin
-									error_handler 	<= 1'b1;
-									rif_rdata 		<= 'h0;
-								end						
-							end
-					// Data Register
-					`register_data1:  	begin 
-								if(wr_rq & Write_Reg_En[0]) begin
-									Data_1 			<= rif_wdata;
-									error_handler 	<= 1'b0;
-								end
-								else if(wr_rq & ~Write_Reg_En[0]) begin
-								  	error_handler <= 1'b1;
-								end
-								else if(rd_rq) begin
-								  	rif_rdata 		<= Data_1; 
-								  	error_handler 	<= 1'b0;
-								end
-						    	end
-					`register_data2:  	begin 
-						        if(wr_rq & Write_Reg_En[1]) begin
-						          	Data_2 			<= rif_wdata;
-						          	error_handler 	<= 1'b0;
-						        end
-						        else if(wr_rq & ~Write_Reg_En[1]) begin
-						          	error_handler <= 1'b1;
-						        end
-						        else if(rd_rq) begin
-						          	rif_rdata 		<= Data_2; 
-						          	error_handler 	<= 1'b0;
-						        end
-					    	end
-					`register_data3:  	begin 
-						    	if(wr_rq & Write_Reg_En[2]) begin
-						          	Data_3 			<= rif_wdata;
-						          	error_handler 	<= 1'b0;
-						        end
-						        else if(wr_rq & ~Write_Reg_En[2]) begin
-						          	error_handler <= 1'b1;
-						        end
-						        else if(rd_rq) begin
-						          	rif_rdata 		<= Data_3; 
-						          	error_handler 	<= 1'b0;
-						        end
-					    	end
-					// Registers not mapped
-					default:  begin error_handler <= 1'b1; end
-        endcase // reg_dec
-
-       	    // Status Register Process
-    always_ff @(posedge rif_clk or posedge rif_arst) begin : proc_status
-      if(rif_arst) begin
-        Status_1    <= 'h0; 
-        Status_2    <= 'h0;
-        Status_3    <= 'h0;
-      end 
-      else begin
-        Status_1[0]   <= (reg_dec_dly == 'd4) ? (~(wr_rq & Write_Reg_En[0]) ? 'b1 : Status_1) : Status_1; 
-        Status_2[0]   <= (reg_dec_dly == 'd5) ? (~(wr_rq & Write_Reg_En[1]) ? 'b1 : Status_2) : Status_2;
-        Status_3[0]   <= (reg_dec_dly == 'd6) ? (~(wr_rq & Write_Reg_En[2]) ? 'b1 : Status_3) : Status_3;
-      end
-    end
-   */
