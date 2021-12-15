@@ -38,8 +38,13 @@
  * -> functionalities.
 */
 
+`ifndef COCOTB_SIM
 // Main Inclusion
 `include "./apb_design_includes.sv"
+`else
+// Main Inclusion
+`include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Design/apb_design_includes.sv"
+`endif
 
 // If not here ICARUS will fire an error due to null macro registered
 `ifdef COCOTB_SIM

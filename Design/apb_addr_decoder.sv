@@ -40,8 +40,14 @@
 	The parametrized version of such design would get the number of slaves as input and the start and end address value
 	then it generates the proper decode signal (making sure is one hot to avoid muliple erroneous slave selection)
 */
-// Main inclusion
+
+`ifndef COCOTB_SIM
+// Main Inclusion
 `include "./apb_design_includes.sv"
+`else
+// Main Inclusion
+`include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Design/apb_design_includes.sv"
+`endif
 
 // Main Module
 module apb_decoder

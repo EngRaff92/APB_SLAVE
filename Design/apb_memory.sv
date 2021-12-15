@@ -41,8 +41,13 @@
 	The memory is initialized with incremantal values, unless ZERO_MEM is set to 1 then all zero will be loaded at wake up time
 */
 
+`ifndef COCOTB_SIM
 // Main Inclusion
 `include "./apb_design_includes.sv"
+`else 
+// Main Inclusion
+`include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Design/apb_design_includes.sv"
+`endif
 
 // Main Module
 module apb_memory
