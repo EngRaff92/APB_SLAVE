@@ -32,13 +32,19 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-from cocotb.triggers import FallingEdge, RisingEdge
-from cocotb.triggers import Timer
-from cocotb.triggers import Event
-from cocotb.triggers import Join, First, Combine
-from cocotb.clock import Clock
-from cocotb.result import TestFailure, ReturnValue
+""" Main TB top entity used to run tests and generate clocks and reset sequences"""
+
+#######################################################################################
+## Import Files
+#######################################################################################
+from cocotb.triggers    import FallingEdge, RisingEdge
+from cocotb.triggers    import Timer
+from cocotb.triggers    import Event
+from cocotb.triggers    import Join, First, Combine
+from cocotb.clock       import Clock
+from cocotb.result      import TestFailure, ReturnValue
 import cocotb
+import apb_base_test
 
 ## Main interface
 class apb_interface:
@@ -128,18 +134,18 @@ class apb_interface:
         if self.dut.pready.value != 1:
             await RisingEdge(self.dut.pready)
 
-## Main Test
+## Main TOP class
 @cocotb.test()
 async def test_apb_general_read_write(dut):
     apb_if = apb_interface(dut)
     dut._log.info("Running Reset")
     reset_coro = cocotb.start_soon(apb_if.apb_reset())
     dut._log.info("Running Clock")
-    ## clock_coro = cocotb.start_soon(apb_if.run_clock(10))
     clock_coro = cocotb.start_soon(Clock(dut.pclk, 2, units='ns').start())
     ## Wait for some clock cycles
-    await reset_coro
-    await apb_if.wait_clock(20)
-    await apb_if.apb_wr(0,5)
-    data_out = await apb_if.apb_rd(0)
-    await apb_if.wait_clock(2)
+    # await reset_coro
+    # await apb_if.wait_clock(20)
+    # await apb_if.apb_wr(0,5)
+    # data_out = await apb_if.apb_rd(0)
+    # await apb_if.wait_clock(2)
+    await uvm_root().run_test("apb_base_test")
