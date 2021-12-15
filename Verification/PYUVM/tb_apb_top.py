@@ -66,7 +66,7 @@ class apb_interface:
         ## clear out the event
         self.reset_done.clear()
         ## set the RTL to a known state
-        ## await self.set_known_state()
+        await self.set_known_state()
         ## Issue a reset routine
         self.dut.pclk_en.value  = 1
         self.dut.prst.value     = 0
@@ -79,12 +79,16 @@ class apb_interface:
         self.dut.prst.value     = 0
         ## Set the event
         self.reset_done.set()
+    
+    ## Task used to wait for reset completion
+    async def wait_for_reset(self):
+        self.reset_done.wait()
 
     ## Task used to read from specific address
-    async def apb_rd(self, address, data_read):
+    async def apb_rd(self, address):
         if self.dut.pready.value != 1:
             await RisingEdge(self.dut.pready)
-        dut._log.info("Start WR TRX at address: {} with Data: {}".format(addr,wdata))
+        self.dut._log.info("Start WR TRX at address: {}".format(address))
         self.dut.psel.value     = 1
         self.dut.paddr.value    = address
         self.dut.pwrite.value   = 0
@@ -100,13 +104,14 @@ class apb_interface:
         data_read               = self.dut.prdata.value
         if self.dut.pready.value != 1:
             await RisingEdge(self.dut.pready)
-        dut._log.info("Start WR TRX at address: {} with Data: {}".format(addr,wdata))
+        self.dut._log.info("Finish RD TRX at address: {} with Data: {}".format(hex(address),hex(data_read)))
+        return data_read
 
     ## Task used to write at specific address
     async def apb_wr(self, address, data_write):
         if self.dut.pready.value != 1:
             await RisingEdge(self.dut.pready)
-        #dut._log.info("Start WR TRX at address: {} with Data: {}".format(addr,wdata))
+        self.dut._log.info("Start WR TRX at address: {} with Data: {}".format(hex(address),hex(data_write)))
         self.dut.psel.value     = 1
         self.dut.paddr.value    = address
         self.dut.pwrite.value   = 1
@@ -135,5 +140,6 @@ async def test_apb_general_read_write(dut):
     ## Wait for some clock cycles
     await reset_coro
     await apb_if.wait_clock(20)
-    #await apb_if.apb_wr(5,5)
+    await apb_if.apb_wr(0,5)
+    data_out = await apb_if.apb_rd(0)
     await apb_if.wait_clock(2)

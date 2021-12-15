@@ -1,5 +1,5 @@
 $date
-	Tue Dec 14 23:58:40 2021
+	Wed Dec 15 19:41:04 2021
 $end
 $version
 	Icarus Verilog
@@ -18,25 +18,26 @@ $var wire 1 ' psel $end
 $var wire 32 ( pwdata [31:0] $end
 $var wire 1 ) pwrite $end
 $var wire 32 * write_enable_out [31:0] $end
-$var wire 1 + rif_error_out $end
-$var wire 32 , rif_data_out [31:0] $end
-$var wire 8 - mem_int_addr [7:0] $end
-$var wire 32 . mem_data_out [31:0] $end
-$var wire 32 / data_3_out [31:0] $end
-$var wire 32 0 data_2_out [31:0] $end
-$var wire 32 1 data_1_out [31:0] $end
-$var wire 2 2 address_selector [1:0] $end
-$var reg 1 3 cnt $end
-$var reg 32 4 data_status_1_in [31:0] $end
-$var reg 32 5 data_status_2_in [31:0] $end
-$var reg 32 6 data_status_3_in [31:0] $end
-$var reg 32 7 prdata [31:0] $end
-$var reg 1 8 pready $end
-$var reg 1 9 pslverror $end
-$var reg 2 : slv_cs [1:0] $end
-$var reg 1 ; slv_wr_rd_en $end
-$var reg 2 < cstate [1:0] $end
-$var reg 2 = nstate [1:0] $end
+$var wire 2 + slvx_ready [1:0] $end
+$var wire 1 , slv_wr_rd_en $end
+$var wire 2 - slv_cs [1:0] $end
+$var wire 1 . rif_error_out $end
+$var wire 32 / rif_data_out [31:0] $end
+$var wire 1 0 pready $end
+$var wire 32 1 prdata [31:0] $end
+$var wire 8 2 mem_int_addr [7:0] $end
+$var wire 32 3 mem_data_out [31:0] $end
+$var wire 32 4 data_3_out [31:0] $end
+$var wire 32 5 data_2_out [31:0] $end
+$var wire 32 6 data_1_out [31:0] $end
+$var wire 2 7 address_selector [1:0] $end
+$var reg 1 8 cnt $end
+$var reg 32 9 data_status_1_in [31:0] $end
+$var reg 32 : data_status_2_in [31:0] $end
+$var reg 32 ; data_status_3_in [31:0] $end
+$var reg 1 < pslverror $end
+$var reg 2 = cstate [1:0] $end
+$var reg 2 > nstate [1:0] $end
 $scope begin genblk1[0] $end
 $scope begin genblk2 $end
 $upscope $end
@@ -45,60 +46,116 @@ $scope begin genblk1[1] $end
 $scope begin genblk4 $end
 $upscope $end
 $upscope $end
+$scope begin genblk1[2] $end
+$scope begin genblk6 $end
+$upscope $end
+$upscope $end
+$scope begin genblk1[3] $end
+$scope begin genblk8 $end
+$upscope $end
+$upscope $end
+$scope begin genblk1[4] $end
+$scope begin genblk10 $end
+$upscope $end
+$upscope $end
+$scope begin genblk1[5] $end
+$scope begin genblk12 $end
+$upscope $end
+$upscope $end
+$scope begin genblk1[6] $end
+$scope begin genblk14 $end
+$upscope $end
+$upscope $end
+$scope begin genblk1[7] $end
+$scope begin genblk16 $end
+$upscope $end
+$upscope $end
+$scope module u_apb_decoder $end
+$var wire 32 ? dec_mst_addr [31:0] $end
+$var wire 1 % dec_mst_cs $end
+$var wire 1 ) dec_mst_wr_rd_en $end
+$var wire 1 , dec_slv_wr_rd_en $end
+$var wire 32 @ dec_slvx_rd_data_0 [31:0] $end
+$var wire 32 A dec_slvx_rd_data_1 [31:0] $end
+$var wire 32 B dec_slvx_rd_data_2 [31:0] $end
+$var wire 32 C dec_slvx_rd_data_3 [31:0] $end
+$var wire 32 D dec_slvx_rd_data_4 [31:0] $end
+$var wire 32 E dec_slvx_rd_data_5 [31:0] $end
+$var wire 32 F dec_slvx_rd_data_6 [31:0] $end
+$var wire 32 G dec_slvx_rd_data_7 [31:0] $end
+$var wire 1 H dec_slvx_ready_0 $end
+$var wire 1 I dec_slvx_ready_1 $end
+$var wire 1 J dec_slvx_ready_2 $end
+$var wire 1 K dec_slvx_ready_3 $end
+$var wire 1 L dec_slvx_ready_4 $end
+$var wire 1 M dec_slvx_ready_5 $end
+$var wire 1 N dec_slvx_ready_6 $end
+$var wire 1 O dec_slvx_ready_7 $end
+$var wire 2 P dec_slv_cs [1:0] $end
+$var reg 32 Q dec_mst_rdata [31:0] $end
+$var reg 1 0 dec_slv_ready $end
+$var reg 9 R internal_decode [8:0] $end
+$scope begin genblk1[0] $end
+$upscope $end
+$scope begin genblk1[1] $end
+$upscope $end
+$scope begin decoder_logic $end
+$upscope $end
+$upscope $end
 $scope module u_apb_mem $end
-$var wire 8 > maddr [7:0] $end
+$var wire 8 S maddr [7:0] $end
 $var wire 1 & mem_ares $end
-$var wire 1 ? mem_cs $end
-$var wire 1 @ mem_ready $end
-$var wire 1 ; mem_wr_en $end
-$var wire 32 A mwdata [31:0] $end
-$var reg 32 B mrdata [31:0] $end
+$var wire 1 T mem_cs $end
+$var wire 1 U mem_ready $end
+$var wire 1 , mem_wr_en $end
+$var wire 32 V mwdata [31:0] $end
+$var reg 32 W mrdata [31:0] $end
 $scope begin mem_rd_wr_logic $end
 $scope begin init_memory $end
 $scope begin $ivl_for_loop0 $end
-$var integer 32 C i [31:0] $end
+$var integer 32 X i [31:0] $end
 $upscope $end
 $upscope $end
 $upscope $end
 $upscope $end
 $scope module u_apb_rif $end
-$var wire 32 D data_status_1 [31:0] $end
-$var wire 32 E data_status_1_in [31:0] $end
-$var wire 32 F data_status_2 [31:0] $end
-$var wire 32 G data_status_2_in [31:0] $end
-$var wire 32 H data_status_3 [31:0] $end
-$var wire 32 I data_status_3_in [31:0] $end
-$var wire 1 J rd_rq $end
-$var wire 32 K rif_addr [31:0] $end
+$var wire 32 Y data_status_1 [31:0] $end
+$var wire 32 Z data_status_1_in [31:0] $end
+$var wire 32 [ data_status_2 [31:0] $end
+$var wire 32 \ data_status_2_in [31:0] $end
+$var wire 32 ] data_status_3 [31:0] $end
+$var wire 32 ^ data_status_3_in [31:0] $end
+$var wire 1 _ rd_rq $end
+$var wire 32 ` rif_addr [31:0] $end
 $var wire 1 & rif_arst $end
 $var wire 1 # rif_clk $end
-$var wire 1 L rif_cs $end
-$var wire 32 M rif_wdata [31:0] $end
-$var wire 1 ; rif_write $end
-$var wire 1 N wr_rq $end
-$var wire 32 O write_enable_out [31:0] $end
-$var wire 1 P rif_ready $end
-$var wire 1 + rif_error $end
-$var wire 32 Q reg_dec [31:0] $end
-$var wire 32 R data_3_out [31:0] $end
-$var wire 32 S data_2_out [31:0] $end
-$var wire 32 T data_1_out [31:0] $end
-$var reg 32 U data_1 [31:0] $end
-$var reg 1 V data_1_dec $end
-$var reg 32 W data_2 [31:0] $end
-$var reg 1 X data_2_dec $end
-$var reg 32 Y data_3 [31:0] $end
-$var reg 1 Z data_3_dec $end
-$var reg 1 [ data_status_1_dec $end
-$var reg 1 \ data_status_2_dec $end
-$var reg 1 ] data_status_3_dec $end
-$var reg 1 ^ error_access $end
-$var reg 1 _ error_handler $end
-$var reg 32 ` reg_dec_dly [31:0] $end
-$var reg 2 a regsistered_request [1:0] $end
-$var reg 32 b rif_rdata [31:0] $end
-$var reg 32 c write_enable [31:0] $end
-$var reg 1 d write_enable_dec $end
+$var wire 1 a rif_cs $end
+$var wire 32 b rif_wdata [31:0] $end
+$var wire 1 , rif_write $end
+$var wire 1 c wr_rq $end
+$var wire 32 d write_enable_out [31:0] $end
+$var wire 1 e rif_ready $end
+$var wire 1 . rif_error $end
+$var wire 32 f reg_dec [31:0] $end
+$var wire 32 g data_3_out [31:0] $end
+$var wire 32 h data_2_out [31:0] $end
+$var wire 32 i data_1_out [31:0] $end
+$var reg 32 j data_1 [31:0] $end
+$var reg 1 k data_1_dec $end
+$var reg 32 l data_2 [31:0] $end
+$var reg 1 m data_2_dec $end
+$var reg 32 n data_3 [31:0] $end
+$var reg 1 o data_3_dec $end
+$var reg 1 p data_status_1_dec $end
+$var reg 1 q data_status_2_dec $end
+$var reg 1 r data_status_3_dec $end
+$var reg 1 s error_access $end
+$var reg 1 t error_handler $end
+$var reg 32 u reg_dec_dly [31:0] $end
+$var reg 2 v regsistered_request [1:0] $end
+$var reg 32 w rif_rdata [31:0] $end
+$var reg 32 x write_enable [31:0] $end
+$var reg 1 y write_enable_dec $end
 $scope begin addres_decoding $end
 $upscope $end
 $scope begin proc_reg $end
@@ -130,80 +187,107 @@ $upscope $end
 $enddefinitions $end
 #0
 $dumpvars
-0d
-bx c
-bx b
-bx a
-b0zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz `
-x_
-1^
-0]
-0\
-0[
-0Z
-bx Y
-0X
+0y
+bx x
+bx w
+bx1 v
+b0zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz u
+xt
+0s
+0r
+0q
+0p
+0o
+bx n
+0m
+bx l
+1k
+bx j
+b0 i
+b0 h
+b0 g
+b0 f
+xe
+b0 d
+0c
+b0 b
+0a
+b0 `
+0_
+b0 ^
+b0 ]
+b0 \
+b0 [
+b0 Z
+b0 Y
+b0 X
 bx W
-0V
-bx U
-bx T
-bx S
-bx R
-b0zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz Q
-xP
-bx O
+b0 V
+1U
+0T
+b11000000 S
+b1 R
+bx Q
+b0 P
+xO
 xN
-bz M
+xM
 xL
-bz K
+xK
 xJ
-b0 I
-b0 H
+1I
+xH
 b0 G
 b0 F
 b0 E
 b0 D
 b0 C
-bx B
-bz A
-1@
-x?
-bx >
+b0 B
+bx A
+bx @
+b0 ?
+b0 >
 b0 =
-b0 <
-x;
-bx :
-x9
+x<
+b0 ;
+b0 :
+b0 9
 x8
-bx 7
+b0 7
 b0 6
 b0 5
 b0 4
-x3
-bz 2
+bx 3
+b11000000 2
 bx 1
-bx 0
+x0
 bx /
-bx .
-bx -
-bx ,
-x+
-bx *
-z)
-bz (
-z'
+0.
+b0 -
+0,
+b1x +
+b0 *
+0)
+b0 (
+0'
 0&
-z%
+0%
 1$
 1#
-bz "
+b0 "
 1!
 $end
 #1
-09
+0<
 0!
 0#
 #2
+10
+1H
+b11 +
+1e
+b11 v
+b0 u
 1!
 1#
 #3
@@ -228,22 +312,16 @@ $end
 0!
 0#
 #10
-b0 /
-b0 R
-b0 0
-b0 S
 b0 1
-b0 T
-03
-b0 Y
-b0 W
-b0 U
-b0 ,
-b0 b
-1P
-b11 a
-b0 `
-b100000000 C
+b0 Q
+08
+b0 n
+b0 l
+b0 j
+b0 @
+b0 /
+b0 w
+b100000000 X
 1!
 1&
 1#
@@ -264,158 +342,325 @@ b100000000 C
 0&
 0#
 #16
-13
-xP
-b1x a
-b0zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz `
+18
 1!
 1#
 #17
 0!
 0#
 #18
-03
-bx a
+08
 1!
 1#
 #19
 0!
 0#
 #20
-13
+18
 1!
 1#
 #21
 0!
 0#
 #22
-03
+08
 1!
 1#
 #23
 0!
 0#
 #24
-13
+18
 1!
 1#
 #25
 0!
 0#
 #26
-03
+08
 1!
 1#
 #27
 0!
 0#
 #28
-13
+18
 1!
 1#
 #29
 0!
 0#
 #30
-03
+08
 1!
 1#
 #31
 0!
 0#
 #32
-13
+18
 1!
 1#
 #33
 0!
 0#
 #34
-03
+08
 1!
 1#
 #35
 0!
 0#
 #36
-13
+18
 1!
 1#
 #37
 0!
 0#
 #38
-03
+08
 1!
 1#
 #39
 0!
 0#
 #40
-13
+18
 1!
 1#
 #41
 0!
 0#
 #42
-03
+08
 1!
 1#
 #43
 0!
 0#
 #44
-13
+18
 1!
 1#
 #45
 0!
 0#
 #46
-03
+08
 1!
 1#
 #47
 0!
 0#
 #48
-13
+18
 1!
 1#
 #49
 0!
 0#
 #50
-03
+08
 1!
 1#
 #51
 0!
 0#
 #52
-13
+18
 1!
 1#
 #53
 0!
 0#
 #54
-03
+1k
+b1 >
+b1 Y
+b1 9
+b1 Z
+1'
+1,
+1)
+b101 (
+b101 V
+b101 b
+08
 1!
 1#
 #55
 0!
 0#
 #56
-13
+b0 Y
+b0 9
+b0 Z
+1c
+x.
+bx *
+bx d
+1a
+b1 -
+b1 P
+b10 >
+1%
+1k
+b1 =
+18
 1!
 1#
 #57
+x<
 0!
 0#
 #58
-03
+0.
+b0 *
+b0 d
+0a
+0_
+b0 -
+b0 P
+0c
+b0 >
+0'
+0%
+0,
+0)
+00
+1k
+b0 6
+b0 i
+0H
+b10 =
+08
+b101 j
+b10 +
+0e
+b10 v
 1!
 1#
 #59
+0<
+0!
+0#
+#60
+1k
+b0 =
+18
+b10 +
+0e
+b1 v
+1!
+1#
+#61
+0!
+0#
+#62
+1k
+b1 >
+1'
+b0 (
+b0 V
+b0 b
+10
+1H
+08
+b11 +
+1e
+b11 v
+1!
+1#
+#63
+0!
+0#
+#64
+1_
+x.
+bx *
+bx d
+b101 6
+b101 i
+1a
+b1 -
+b1 P
+b11 >
+1%
+1k
+b1 =
+18
+1!
+1#
+#65
+x<
+0!
+0#
+#66
+0_
+0.
+b0 *
+b0 d
+b0 6
+b0 i
+0a
+b0 -
+b0 P
+b0 >
+0'
+0%
+00
+1k
+b101 1
+b101 Q
+0H
+b11 =
+08
+b101 @
+b101 /
+b101 w
+b10 +
+0e
+b10 v
+1!
+1#
+#67
+0<
+0!
+0#
+#68
+1k
+b0 =
+18
+b10 +
+0e
+b1 v
+1!
+1#
+#69
+0!
+0#
+#70
+10
+1H
+08
+b11 +
+1e
+b11 v
+1!
+1#
+#71
+0!
+0#
+#72
+18
+1!
+1#
+#73
+0!
+0#
+#74
+08
+1!
+1#
+#75

@@ -43,25 +43,12 @@
 `else
 // Main Inclusion
 `include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Design/apb_design_includes.sv"
-`endif
-
-// If not here ICARUS will fire an error due to null macro registered
-`ifdef COCOTB_SIM
-`define regfile_apb_rif  32'h0
-`define register_data1  32'h0
-`define register_data2  32'h4
-`define register_data3  32'h8
-`define register_write_enable  32'hc
-`define register_data_status_1  32'h10
-`define register_data_status_2  32'h14
-`define register_data_status_3  32'h18
-`define memory_adress_start  32'h100
-`define memory_adress_end  32'h4fc
+`include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Apb_Reggen/output_all/apb_reg_param.svh"
 `endif
 
 module apb_slave_controller #(
     // Parameter Declaration and propagation
-    parameter N_OF_SLAVES   = 2,
+    parameter N_OF_SLAVES   = 2,    // Number of slaves connected to the decoder
     parameter REG_WIDTH     = 32,   // Single register WIDTH (single WORD alligned acces)
     parameter WAIT_STATE    = 0,    // this will basically used in case of Slower sub-slaves
     parameter MEMORY_DEPTH  = 256,  // Number of memory slots   
@@ -165,7 +152,7 @@ module apb_slave_controller #(
     end
 
     // Additional Signals for DECODER to sub_slaves connection
-    logic slvx_ready[N_OF_SLAVES:0];
+    logic [N_OF_SLAVES-1:0] slvx_ready;
     logic slv_wr_rd_en;
     logic [N_OF_SLAVES-1:0] slv_cs;
     logic [REG_WIDTH-1:0] mem_data_out;
@@ -183,12 +170,12 @@ module apb_slave_controller #(
     logic [REG_WIDTH-1:0] write_enable_out;
 
     // Declare the merging Arrays of Data
-    logic [REG_WIDTH-1:0]   slvx_data_out[N_OF_SLAVES-1:0];
+    logic [REG_WIDTH-1:0]   slvx_data_out[`MAX_N_OF_SLVS-1:0];
     
     // Assign the Data to the merging array (if more bandwith is used in the memory just concatenate it)
     genvar jj;
       generate
-        for(jj=0; jj<N_OF_SLAVES; jj++) begin
+        for(jj=0; jj<`MAX_N_OF_SLVS; jj++) begin
           if(jj==0) begin
             assign slvx_data_out[0] = rif_data_out;
           end
@@ -231,8 +218,22 @@ module apb_slave_controller #(
         .dec_mst_addr    (paddr),
         .dec_mst_wr_rd_en(pwrite),
         .dec_mst_cs      (penable),
-        .dec_slvx_ready  (slvx_ready),
-        .dec_slvx_rd_data(slvx_data_out),
+        .dec_slvx_ready_0(slvx_ready[0]),
+        .dec_slvx_ready_1(slvx_ready[1]),
+        .dec_slvx_ready_2(slvx_ready[2]),
+        .dec_slvx_ready_3(slvx_ready[3]),
+        .dec_slvx_ready_4(slvx_ready[4]),
+        .dec_slvx_ready_5(slvx_ready[5]),
+        .dec_slvx_ready_6(slvx_ready[6]),
+        .dec_slvx_ready_7(slvx_ready[7]),
+        .dec_slvx_rd_data_0(slvx_data_out[0]),
+        .dec_slvx_rd_data_1(slvx_data_out[1]),
+        .dec_slvx_rd_data_2(slvx_data_out[2]),
+        .dec_slvx_rd_data_3(slvx_data_out[3]),
+        .dec_slvx_rd_data_4(slvx_data_out[4]),
+        .dec_slvx_rd_data_5(slvx_data_out[5]),
+        .dec_slvx_rd_data_6(slvx_data_out[6]),
+        .dec_slvx_rd_data_7(slvx_data_out[7]),
         .dec_slv_cs      (slv_cs),
         .dec_mst_rdata   (prdata),
         .dec_slv_ready   (pready),
