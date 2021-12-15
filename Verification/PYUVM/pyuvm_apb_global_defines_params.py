@@ -33,10 +33,16 @@
 #
 ##
 
+""" This is a list of Enumerations and Parameters used across the Testbench """
+
+########################################################################################################
+## Import Modules
+########################################################################################################
+from enum import Enum, unique
+
 ########################################################################################################
 ## Defines and Parameters for Testbench
 ########################################################################################################
-##`include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Apb_Reggen/output_all/apb_reg_param.svh"
 
 ## Parameters
 REG_WIDTH = 32
@@ -46,6 +52,7 @@ REG_WIDTH = 32
 ########################################################################################################
 
 ##
+@unique
 class policy_t(Enum):
     WO  = 0
     RO  = 1
@@ -54,11 +61,13 @@ class policy_t(Enum):
     ROC = 4
 
 ##
+@unique
 class access_t(Enum):
     RIF  = 0
     MEM  = 1
 
 ##
+@unique
 class mem_reset_t(Enum):
     ZERO    = 0
     RANDOM  = 1
@@ -66,33 +75,39 @@ class mem_reset_t(Enum):
     IMAGE   = 3
 
 ##
+@unique
 class memory_type_t(Enum):
     PROG  = 0
     OTP   = 1
 
 ##
+@unique
 class apb_cmd_t(Enum):
     WRITE  = 0
     READ   = 1
 
 ##
+@unique
 class apb_resp_t(Enum):
     APB_OK  = 0
     APB_ERR = 1
 
 ##
+@unique
 class debug_print_t(Enum):
     LOW     = 0
     HIGH    = 1
     DEBUG   = 2
 
+## 
+@unique
 class severity_print_t(Enum):
     INFO    = 0
     ERROR   = 1
     FATAL   = 2
     
 ########################################################################################################
-## Includes
+## Imports other modules if needed
 ########################################################################################################
 # import pyuvm_apb_interface.py
 # import pyuvm_apb_register_model.py

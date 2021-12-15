@@ -37,14 +37,20 @@
 #######################################################################################
 ## Import Files
 #######################################################################################
+## Import From
 from cocotb.triggers    import FallingEdge, RisingEdge
 from cocotb.triggers    import Timer
 from cocotb.triggers    import Event
 from cocotb.triggers    import Join, First, Combine
 from cocotb.clock       import Clock
 from cocotb.result      import TestFailure, ReturnValue
+from pyuvm              import *
+## Single import
 import cocotb
-import apb_base_test
+import pyuvm_apb_base_test
+import sys
+## Set the Path to the standard central node so that we can import everything 
+sys.path.append("..")
 
 ## Main interface
 class apb_interface:
@@ -94,7 +100,7 @@ class apb_interface:
     async def apb_rd(self, address):
         if self.dut.pready.value != 1:
             await RisingEdge(self.dut.pready)
-        self.dut._log.info("Start WR TRX at address: {}".format(address))
+        self.dut._log.info("Start RD TRX at address: {}".format(address))
         self.dut.psel.value     = 1
         self.dut.paddr.value    = address
         self.dut.pwrite.value   = 0
@@ -136,12 +142,15 @@ class apb_interface:
 
 ## Main TOP class
 @cocotb.test()
-async def test_apb_general_read_write(dut):
-    apb_if = apb_interface(dut)
+async def apb_tb_top_entity(dut):
+    ## Remember cocotb.top points to the DUT
+    apb_if = apb_interface(cocotb.top)
+    ## Set the interface trhough the configuration database
+    ConfigDB().set(None, "*", "apb_if", apb_if)
     dut._log.info("Running Reset")
-    reset_coro = cocotb.start_soon(apb_if.apb_reset())
+    cocotb.start_soon(apb_if.apb_reset())
     dut._log.info("Running Clock")
-    clock_coro = cocotb.start_soon(Clock(dut.pclk, 2, units='ns').start())
+    cocotb.start_soon(Clock(dut.pclk, 2, units='ns').start())
     ## Wait for some clock cycles
     # await reset_coro
     # await apb_if.wait_clock(20)

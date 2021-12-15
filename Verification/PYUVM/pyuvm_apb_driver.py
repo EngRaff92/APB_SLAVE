@@ -53,7 +53,8 @@ class apb_driver(uvm_driver):
         self.apb_if = ConfigDB().get(self, "", "apb_if")
 
     async def wait_for_reset_done(self):
-        await self.apb_if.wait_for_reset()
+        #await self.apb_if.wait_for_reset()
+        await self.apb_if.apb_reset()
 
     async def run_phase(self):
         await self.wait_for_reset_done()
@@ -61,9 +62,11 @@ class apb_driver(uvm_driver):
             self.apb_trx = await self.seq_item_port.get_next_item()
             self.raise_objection()
             ## Select according to the command used
-            if self.apb_trx.cmd.value == param_file.apb_cmd_t.WRITE:
-                await self.apb_if.apb_wr(apb_trx.address, apb_trx.data_wr)
+            if self.apb_trx.cmd == param_file.apb_cmd_t.WRITE:
+                await self.apb_if.apb_wr(self.apb_trx.address, self.apb_trx.data_wr)
             else:
-                self.data_out = await self.apb_if.apb_rd(apb_trx.address)
+                self.apb_trx.data_rd = await self.apb_if.apb_rd(self.apb_trx.address)
+                self.apb_trx.apb_item_print_on_read()
+                self.data_out = self.apb_trx.data_rd
             self.seq_item_port.item_done()
             self.drop_objection()

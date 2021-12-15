@@ -51,14 +51,14 @@ class apb_seq_item(uvm_sequence_item):
         self.item_name      = name
         self.address        = 0
         self.data_wr        = 0
-        self.access_part    = param_file.access_t()
-        self.cmd            = param_file.apb_cmd_t()
-        self.resp           = param_file.apb_resp_t()
+        self.access_part    = param_file.access_t
+        self.cmd            = param_file.apb_cmd_t
+        self.resp           = param_file.apb_resp_t
         self.data_rd        = 0
 
     def randomize(self):
-        self.access_part    = random.choice(list(access_t))
-        self.cmd            = random.choice(list(apb_cmd_t))
+        self.access_part    = random.choice(list(param_file.access_t))
+        self.cmd            = random.choice(list(param_file.apb_cmd_t))
         self.address        = random.randint(0,10)
         self.data_wr        = random.randint(0,10)
         self.post_randomize()
@@ -71,14 +71,17 @@ class apb_seq_item(uvm_sequence_item):
         uvm_root().logger.info("Print TRX -> Name           : {}".format(self.item_name))
         uvm_root().logger.info("Print TRX -> Address        : {}".format(hex(self.address)))
         uvm_root().logger.info("Print TRX -> Data Write     : {}".format(hex(self.data_wr)))
-        uvm_root().logger.info("Print TRX -> Access Part    : {}".format(self.access_part.name()))
-        uvm_root().logger.info("Print TRX -> CMD type       : {}".format(self.cmd.name()))
+        uvm_root().logger.info("Print TRX -> Access Part    : {}".format(self.access_part.name))
+        uvm_root().logger.info("Print TRX -> CMD type       : {}".format(self.cmd.name))
 
     def apb_item_print_on_read(self):
-        self.logger.info("Print TRX -> Read_data : {}".format(hex(self.data_rd)))
-        self.logger.info("Print TRX -> Response  : {}".format(self.resp.name()))
+        uvm_root().logger.info("Print TRX -> Read_data : {}".format(hex(self.data_rd)))
+        if self.resp == param_file.apb_resp_t.APB_ERR:
+            uvm_root().logger.info("Print TRX -> Response  : {}".format(self.resp.APB_ERR.name))
+        else:
+            uvm_root().logger.info("Print TRX -> Response  : {}".format(self.resp.APB_OK.name))
 
-    def do_copy(self): -> apb_item
+    def do_copy(self):
         self._t             = apb_item("copied_item")
         self._t.address     = self.address  
         self._t.data_wr     = self.data_wr    

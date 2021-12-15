@@ -50,7 +50,7 @@ class apb_base_test(uvm_test):
     """ APB Main Base Test Class """
     def build_phase(self):
         self.apb_environment    = env.apb_env.create("env", self)
-        self.apb_first_seq      = seq.apb_sequence("apb_first_seq",False)
+        self.apb_first_seq      = seq.apb_sequence("apb_first_seq",True)
 
     def end_of_elaboration_phase(self):
         pass
