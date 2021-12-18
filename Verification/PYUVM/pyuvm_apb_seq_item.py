@@ -55,6 +55,7 @@ class apb_seq_item(uvm_sequence_item):
         self.cmd            = param_file.apb_cmd_t
         self.resp           = param_file.apb_resp_t
         self.data_rd        = 0
+        self.do_not_print   = False
 
     def randomize(self):
         self.access_part    = random.choice(list(param_file.access_t))
@@ -64,7 +65,9 @@ class apb_seq_item(uvm_sequence_item):
         self.post_randomize()
 
     def post_randomize(self):
-        self.apb_item_print()
+        if self.do_not_print == False:
+            self.apb_item_print()
+
 
     def apb_item_print(self):
         uvm_root().logger.info("Printing General APB Item Content")

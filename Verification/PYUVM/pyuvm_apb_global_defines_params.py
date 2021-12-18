@@ -105,23 +105,3 @@ class severity_print_t(Enum):
     INFO    = 0
     ERROR   = 1
     FATAL   = 2
-    
-########################################################################################################
-## Imports other modules if needed
-########################################################################################################
-# import pyuvm_apb_interface.py
-# import pyuvm_apb_register_model.py
-# import pyuvm_apb_item.py
-# import pyuvm_apb_generator.py
-# import pyuvm_apb_monitor.py
-# import pyuvm_apb_driver.py
-# import pyuvm_apb_scoreboard.py
-# import pyuvm_apb_env.py
-# import pyuvm_apb_base_test.py
-# import pyuvm_apb_rif_only_RAR.py
-# import pyuvm_apb_rif_only_WAR_RAW.py
-# import pyuvm_apb_rif_only_RANDOM.py
-# import pyuvm_apb_rif_only_STATUS_CHECK.py
-# import pyuvm_apb_rif_only_ERROR_CHECK.py
-# import pyuvm_apb_memory_only_RAR.py
-# import pyuvm_apb_memory_only_WAR_RAW.py

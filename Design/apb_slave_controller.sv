@@ -43,7 +43,6 @@
 `else
 // Main Inclusion
 `include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Design/apb_design_includes.sv"
-`include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Apb_Reggen/output_all/apb_reg_param.svh"
 `endif
 
 module apb_slave_controller #(

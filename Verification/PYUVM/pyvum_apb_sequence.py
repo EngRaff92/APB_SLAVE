@@ -47,18 +47,23 @@ import pyuvm_apb_seq_item as item
 ## Main Class
 class apb_sequence(uvm_sequence):
     """ Apb Sequence """   
-    def __init__(self,name,randomize_items):
-        self.randomize_items    = randomize_items
+    def __init__(self,name):
+        super().__init__(name)
+        self.randomize_items    = False
         self.sequence_name      = name
         self.sequence_id        = 0
+        self.apb_trx            = item.apb_seq_item("Apb_Trx")
+        self.do_not_print_item  = False
 
     async def body(self):
-        self.apb_trx = item.apb_seq_item("Apb_Trx")
+        ## Set the item print flag
+        self.apb_trx.do_not_print = self.do_not_print_item
+        ## Start
         await self.start_item(self.apb_trx)
         if self.randomize_items == True:
             self.apb_trx.randomize()
         await self.finish_item(self.apb_trx)
-        if self.apb_trx.cmd == param_file.apb_cmd_t.WRITE:
+        if self.apb_trx.cmd == param_file.apb_cmd_t.READ:
             self.data_rd = self.apb_trx.data_rd
         else:
             self.data_rd = 0

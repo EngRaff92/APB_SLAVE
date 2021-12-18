@@ -44,20 +44,7 @@
 `else
 // Main Inclusion
 `include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Design/apb_design_includes.sv"
-`endif
-
-// If not here ICARUS will fire an error due to null macro registered
-`ifdef COCOTB_SIM
-`define regfile_apb_rif  32'h0
-`define register_data1  32'h0
-`define register_data2  32'h4
-`define register_data3  32'h8
-`define register_write_enable  32'hc
-`define register_data_status_1  32'h10
-`define register_data_status_2  32'h14
-`define register_data_status_3  32'h18
-`define memory_adress_start  32'h100
-`define memory_adress_end  32'h4fc
+`include "/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Apb_Reggen/output_all/apb_reg_param.svh"
 `endif
 
 // Main Module

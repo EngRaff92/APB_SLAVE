@@ -38,7 +38,7 @@
 ## Import Files
 #######################################################################################
 ## Import From
-from cocotb.triggers    import FallingEdge, RisingEdge
+from cocotb.triggers    import FallingEdge, RisingEdge, ReadOnly
 from cocotb.triggers    import Timer
 from cocotb.triggers    import Event
 from cocotb.triggers    import Join, First, Combine
@@ -49,8 +49,6 @@ from pyuvm              import *
 import cocotb
 import pyuvm_apb_base_test
 import sys
-## Set the Path to the standard central node so that we can import everything 
-sys.path.append("..")
 
 ## Main interface
 class apb_interface:
@@ -100,7 +98,6 @@ class apb_interface:
     async def apb_rd(self, address):
         if self.dut.pready.value != 1:
             await RisingEdge(self.dut.pready)
-        self.dut._log.info("Start RD TRX at address: {}".format(address))
         self.dut.psel.value     = 1
         self.dut.paddr.value    = address
         self.dut.pwrite.value   = 0
@@ -112,18 +109,18 @@ class apb_interface:
         self.dut.psel.value     = 0
         self.dut.penable.value  = 0
         await RisingEdge(self.dut.pclk)
-        ## RIF access END
+        ## Make sure all signals are stable enough before reading
+        ReadOnly() ## (POSTPONED region for SV scheduler)
+        ## APB access END
         data_read               = self.dut.prdata.value
         if self.dut.pready.value != 1:
             await RisingEdge(self.dut.pready)
-        self.dut._log.info("Finish RD TRX at address: {} with Data: {}".format(hex(address),hex(data_read)))
         return data_read
 
     ## Task used to write at specific address
     async def apb_wr(self, address, data_write):
         if self.dut.pready.value != 1:
             await RisingEdge(self.dut.pready)
-        self.dut._log.info("Start WR TRX at address: {} with Data: {}".format(hex(address),hex(data_write)))
         self.dut.psel.value     = 1
         self.dut.paddr.value    = address
         self.dut.pwrite.value   = 1
@@ -135,7 +132,7 @@ class apb_interface:
         self.dut.psel.value     = 0
         self.dut.penable .value = 0
         self.dut.pwrite.value   = 0
-        ## RIF access END
+        ## APB access END
         await RisingEdge(self.dut.pclk)
         if self.dut.pready.value != 1:
             await RisingEdge(self.dut.pready)
@@ -151,10 +148,5 @@ async def apb_tb_top_entity(dut):
     cocotb.start_soon(apb_if.apb_reset())
     dut._log.info("Running Clock")
     cocotb.start_soon(Clock(dut.pclk, 2, units='ns').start())
-    ## Wait for some clock cycles
-    # await reset_coro
-    # await apb_if.wait_clock(20)
-    # await apb_if.apb_wr(0,5)
-    # data_out = await apb_if.apb_rd(0)
-    # await apb_if.wait_clock(2)
+    ## Start Test
     await uvm_root().run_test("apb_base_test")

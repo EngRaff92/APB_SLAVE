@@ -66,7 +66,8 @@ class apb_driver(uvm_driver):
                 await self.apb_if.apb_wr(self.apb_trx.address, self.apb_trx.data_wr)
             else:
                 self.apb_trx.data_rd = await self.apb_if.apb_rd(self.apb_trx.address)
-                self.apb_trx.apb_item_print_on_read()
+                if self.apb_trx.do_not_print == False:
+                    self.apb_trx.apb_item_print_on_read()
                 self.data_out = self.apb_trx.data_rd
             self.seq_item_port.item_done()
             self.drop_objection()

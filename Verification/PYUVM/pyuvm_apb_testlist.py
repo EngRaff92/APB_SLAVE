@@ -32,21 +32,16 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-###############################################################################
-# Hardware
-###############################################################################
-CURRENT_DIR 			= $(shell pwd)
-COCOTB_REDUCED_LOG_FMT 	= True
-SIM 					?= icarus
-#VERILOG_SOURCES 		= $(wildcard ./*.sv)
-VERILOG_SOURCES 		+= $(wildcard ${CURRENT_DIR}/../../Design/*.sv) 
-MODULE 					:= tb_apb_top
-TOPLEVEL 				:= apb_slave_controller
-TOPLEVEL_LANG			= verilog
-COCOTB_HDL_TIMEUNIT		= 1ns
-COCOTB_HDL_TIMEPRECISION= 1ns
-include $(shell cocotb-config --makefiles)/Makefile.sim
+""" Main Sequence used to create and send any TRX to the APB Driver"""
 
-cleanall: clean
-	@rm -rf __pycache__
-	@rm -rf results.xml
+########################################################################################################
+## Imports other modules if needed
+########################################################################################################
+import pyuvm_apb_base_test
+import pyuvm_apb_rif_only_RAR
+import pyuvm_apb_rif_only_WAR_RAW
+import pyuvm_apb_rif_only_RANDOM
+import pyuvm_apb_rif_only_STATUS_CHECK
+import pyuvm_apb_rif_only_ERROR_CHECK
+import pyuvm_apb_memory_only_RAR
+import pyuvm_apb_memory_only_WAR_RAW
