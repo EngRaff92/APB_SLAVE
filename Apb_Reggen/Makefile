@@ -51,13 +51,14 @@ test_variable:
 	@test rdl_file
 
 check_and_remove:
-	@[ -f $(output_dir)apb_reg.csv ] && rm $(output_dir)/apb_reg.csv
-	@[ -f $(output_dir)apb_reg_param.svh ] && rm $(output_dir)/apb_reg_param.svh
+	@rm -rf $(output_dir)
 
 rdb_gen: clean test_variable
 	@if [ ! -d $(output_dir) ]; then mkdir -p $(output_dir); fi
 	@$(current_dir)/generate_uvm_regs.py $(rdl_file)
 	@$(current_dir)/json_exporter.py $(rdl_file)
 	@$(current_dir)/generate_sv_parameters.py
+	@$(current_dir)/generate_rif.py
+	@$(current_dir)/generate_pyuvm_regs.py
 	@$(current_dir)/generate_html.py $(rdl_file)
 	@$(info Register Data Base generation DONE")

@@ -30,11 +30,11 @@ package apb_reg_pkg;
 
         virtual function void build();
             this.data1_wren = new("data1_wren");
-            this.data1_wren.configure(this, 1, 0, "RW", 0, 'h0, 1, 1, 0);
+            this.data1_wren.configure(this, 1, 0, "WO", 0, 'h0, 1, 1, 0);
             this.data2_wren = new("data2_wren");
-            this.data2_wren.configure(this, 1, 1, "RW", 0, 'h0, 1, 1, 0);
+            this.data2_wren.configure(this, 1, 1, "WO", 0, 'h0, 1, 1, 0);
             this.data3_wren = new("data3_wren");
-            this.data3_wren.configure(this, 1, 2, "RW", 0, 'h0, 1, 1, 0);
+            this.data3_wren.configure(this, 1, 2, "WO", 0, 'h0, 1, 1, 0);
         endfunction : build
     endclass : apb_addr_map__apb_rif__wen_t
 

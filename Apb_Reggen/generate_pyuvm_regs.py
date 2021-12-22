@@ -132,8 +132,7 @@ def gen_lists_and_csv(data):
     f.close()
 
 def main():
-    data_f = parse_json()
-    gen_lists_and_csv(data_f)
+    print("Generating PYVUM register model")
 
 if __name__ == '__main__':
 	main()
