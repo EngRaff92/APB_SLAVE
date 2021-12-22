@@ -90,14 +90,12 @@ module apb_rif #(
     logic [REG_WIDTH-1:0] data_1;
     logic [REG_WIDTH-1:0] data_2;
     logic [REG_WIDTH-1:0] data_3;
-
+    logic [REG_WIDTH-1:0] write_enable;
+    
     // DESC: Sets of registers Access Policy is RO
     logic [REG_WIDTH-1:0] data_status_1;
     logic [REG_WIDTH-1:0] data_status_2;
     logic [REG_WIDTH-1:0] data_status_3;
-
-    // DESC: write enable signal
-    logic [REG_WIDTH-1:0] write_enable;
 
     // Register Access Process
     logic error_handler, error_access;

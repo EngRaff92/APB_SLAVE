@@ -12,6 +12,7 @@
                     "type": "reg",
                     "inst_name": "data1",
                     "address_offset": "0x0",
+                    "direction": "output",
                     "children": [
                         {
                             "type": "field",
@@ -19,14 +20,21 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
-                    ]
+                    ],
+                    "global_reset_value": "0x0",
+                    "sw_write_mask": "0xffffffff",
+                    "sw_read_mask": "0xffffffff",
+                    "hw_write_mask": "0x0",
+                    "hw_read_mask": "0xffffffff"
                 },
                 {
                     "type": "reg",
                     "inst_name": "data2",
                     "address_offset": "0x4",
+                    "direction": "output",
                     "children": [
                         {
                             "type": "field",
@@ -34,14 +42,21 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
-                    ]
+                    ],
+                    "global_reset_value": "0x0",
+                    "sw_write_mask": "0xffffffff",
+                    "sw_read_mask": "0xffffffff",
+                    "hw_write_mask": "0x0",
+                    "hw_read_mask": "0xffffffff"
                 },
                 {
                     "type": "reg",
                     "inst_name": "data3",
                     "address_offset": "0x8",
+                    "direction": "output",
                     "children": [
                         {
                             "type": "field",
@@ -49,14 +64,21 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
-                    ]
+                    ],
+                    "global_reset_value": "0x0",
+                    "sw_write_mask": "0xffffffff",
+                    "sw_read_mask": "0xffffffff",
+                    "hw_write_mask": "0x0",
+                    "hw_read_mask": "0xffffffff"
                 },
                 {
                     "type": "reg",
                     "inst_name": "write_enable",
                     "address_offset": "0xc",
+                    "direction": "output",
                     "children": [
                         {
                             "type": "field",
@@ -64,7 +86,8 @@
                             "lsb": 0,
                             "msb": 0,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "w",
+                            "hw_access": "r"
                         },
                         {
                             "type": "field",
@@ -72,7 +95,8 @@
                             "lsb": 1,
                             "msb": 1,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "w",
+                            "hw_access": "r"
                         },
                         {
                             "type": "field",
@@ -80,14 +104,21 @@
                             "lsb": 2,
                             "msb": 2,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "w",
+                            "hw_access": "r"
                         }
-                    ]
+                    ],
+                    "global_reset_value": "0x0",
+                    "sw_write_mask": "0x7",
+                    "sw_read_mask": "0x0",
+                    "hw_write_mask": "0x0",
+                    "hw_read_mask": "0x7"
                 },
                 {
                     "type": "reg",
                     "inst_name": "data_status_1",
                     "address_offset": "0x10",
+                    "direction": "input",
                     "children": [
                         {
                             "type": "field",
@@ -95,14 +126,21 @@
                             "lsb": 0,
                             "msb": 0,
                             "reset": 0,
-                            "sw_access": "r"
+                            "sw_access": "r",
+                            "hw_access": "w"
                         }
-                    ]
+                    ],
+                    "global_reset_value": "0x0",
+                    "sw_write_mask": "0x0",
+                    "sw_read_mask": "0x1",
+                    "hw_write_mask": "0x1",
+                    "hw_read_mask": "0x0"
                 },
                 {
                     "type": "reg",
                     "inst_name": "data_status_2",
                     "address_offset": "0x14",
+                    "direction": "input",
                     "children": [
                         {
                             "type": "field",
@@ -110,14 +148,21 @@
                             "lsb": 0,
                             "msb": 0,
                             "reset": 0,
-                            "sw_access": "r"
+                            "sw_access": "r",
+                            "hw_access": "w"
                         }
-                    ]
+                    ],
+                    "global_reset_value": "0x0",
+                    "sw_write_mask": "0x0",
+                    "sw_read_mask": "0x1",
+                    "hw_write_mask": "0x1",
+                    "hw_read_mask": "0x0"
                 },
                 {
                     "type": "reg",
                     "inst_name": "data_status_3",
                     "address_offset": "0x18",
+                    "direction": "input",
                     "children": [
                         {
                             "type": "field",
@@ -125,9 +170,15 @@
                             "lsb": 0,
                             "msb": 0,
                             "reset": 0,
-                            "sw_access": "r"
+                            "sw_access": "r",
+                            "hw_access": "w"
                         }
-                    ]
+                    ],
+                    "global_reset_value": "0x0",
+                    "sw_write_mask": "0x0",
+                    "sw_read_mask": "0x1",
+                    "hw_write_mask": "0x1",
+                    "hw_read_mask": "0x0"
                 }
             ]
         },
@@ -148,7 +199,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -164,7 +216,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -180,7 +233,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -196,7 +250,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -212,7 +267,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -228,7 +284,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -244,7 +301,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -260,7 +318,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -276,7 +335,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -292,7 +352,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -308,7 +369,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -324,7 +386,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -340,7 +403,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -356,7 +420,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -372,7 +437,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -388,7 +454,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -404,7 +471,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -420,7 +488,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -436,7 +505,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -452,7 +522,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -468,7 +539,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -484,7 +556,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -500,7 +573,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -516,7 +590,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -532,7 +607,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -548,7 +624,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -564,7 +641,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -580,7 +658,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -596,7 +675,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -612,7 +692,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -628,7 +709,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -644,7 +726,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -660,7 +743,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -676,7 +760,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -692,7 +777,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -708,7 +794,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -724,7 +811,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -740,7 +828,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -756,7 +845,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -772,7 +862,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -788,7 +879,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -804,7 +896,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -820,7 +913,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -836,7 +930,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -852,7 +947,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -868,7 +964,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -884,7 +981,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -900,7 +998,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -916,7 +1015,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -932,7 +1032,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -948,7 +1049,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -964,7 +1066,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -980,7 +1083,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -996,7 +1100,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1012,7 +1117,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1028,7 +1134,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1044,7 +1151,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1060,7 +1168,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1076,7 +1185,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1092,7 +1202,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1108,7 +1219,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1124,7 +1236,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1140,7 +1253,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1156,7 +1270,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1172,7 +1287,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1188,7 +1304,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1204,7 +1321,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1220,7 +1338,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1236,7 +1355,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1252,7 +1372,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1268,7 +1389,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1284,7 +1406,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1300,7 +1423,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1316,7 +1440,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1332,7 +1457,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1348,7 +1474,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1364,7 +1491,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1380,7 +1508,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1396,7 +1525,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1412,7 +1542,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1428,7 +1559,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1444,7 +1576,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1460,7 +1593,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1476,7 +1610,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1492,7 +1627,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1508,7 +1644,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1524,7 +1661,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1540,7 +1678,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1556,7 +1695,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1572,7 +1712,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1588,7 +1729,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1604,7 +1746,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1620,7 +1763,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1636,7 +1780,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1652,7 +1797,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1668,7 +1814,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1684,7 +1831,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1700,7 +1848,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1716,7 +1865,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1732,7 +1882,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1748,7 +1899,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1764,7 +1916,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1780,7 +1933,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1796,7 +1950,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1812,7 +1967,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1828,7 +1984,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1844,7 +2001,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1860,7 +2018,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1876,7 +2035,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1892,7 +2052,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1908,7 +2069,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1924,7 +2086,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1940,7 +2103,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1956,7 +2120,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1972,7 +2137,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -1988,7 +2154,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2004,7 +2171,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2020,7 +2188,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2036,7 +2205,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2052,7 +2222,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2068,7 +2239,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2084,7 +2256,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2100,7 +2273,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2116,7 +2290,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2132,7 +2307,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2148,7 +2324,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2164,7 +2341,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2180,7 +2358,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2196,7 +2375,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2212,7 +2392,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2228,7 +2409,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2244,7 +2426,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2260,7 +2443,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2276,7 +2460,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2292,7 +2477,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2308,7 +2494,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2324,7 +2511,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2340,7 +2528,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2356,7 +2545,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2372,7 +2562,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2388,7 +2579,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2404,7 +2596,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2420,7 +2613,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2436,7 +2630,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2452,7 +2647,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2468,7 +2664,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2484,7 +2681,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2500,7 +2698,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2516,7 +2715,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2532,7 +2732,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2548,7 +2749,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2564,7 +2766,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2580,7 +2783,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2596,7 +2800,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2612,7 +2817,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2628,7 +2834,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2644,7 +2851,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2660,7 +2868,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2676,7 +2885,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2692,7 +2902,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2708,7 +2919,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2724,7 +2936,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2740,7 +2953,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2756,7 +2970,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2772,7 +2987,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2788,7 +3004,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2804,7 +3021,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2820,7 +3038,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2836,7 +3055,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2852,7 +3072,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2868,7 +3089,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2884,7 +3106,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2900,7 +3123,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2916,7 +3140,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2932,7 +3157,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2948,7 +3174,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2964,7 +3191,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2980,7 +3208,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -2996,7 +3225,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3012,7 +3242,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3028,7 +3259,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3044,7 +3276,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3060,7 +3293,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3076,7 +3310,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3092,7 +3327,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3108,7 +3344,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3124,7 +3361,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3140,7 +3378,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3156,7 +3395,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3172,7 +3412,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3188,7 +3429,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3204,7 +3446,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3220,7 +3463,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3236,7 +3480,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3252,7 +3497,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3268,7 +3514,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3284,7 +3531,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3300,7 +3548,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3316,7 +3565,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3332,7 +3582,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3348,7 +3599,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3364,7 +3616,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3380,7 +3633,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3396,7 +3650,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3412,7 +3667,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3428,7 +3684,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3444,7 +3701,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3460,7 +3718,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3476,7 +3735,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3492,7 +3752,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3508,7 +3769,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3524,7 +3786,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3540,7 +3803,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3556,7 +3820,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3572,7 +3837,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3588,7 +3854,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3604,7 +3871,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3620,7 +3888,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3636,7 +3905,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3652,7 +3922,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3668,7 +3939,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3684,7 +3956,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3700,7 +3973,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3716,7 +3990,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3732,7 +4007,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3748,7 +4024,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3764,7 +4041,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3780,7 +4058,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3796,7 +4075,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3812,7 +4092,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3828,7 +4109,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3844,7 +4126,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3860,7 +4143,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3876,7 +4160,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3892,7 +4177,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3908,7 +4194,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3924,7 +4211,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3940,7 +4228,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3956,7 +4245,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3972,7 +4262,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -3988,7 +4279,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -4004,7 +4296,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -4020,7 +4313,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -4036,7 +4330,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -4052,7 +4347,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -4068,7 +4364,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -4084,7 +4381,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -4100,7 +4398,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -4116,7 +4415,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -4132,7 +4432,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -4148,7 +4449,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -4164,7 +4466,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -4180,7 +4483,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -4196,7 +4500,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -4212,7 +4517,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 },
@@ -4228,7 +4534,8 @@
                             "lsb": 0,
                             "msb": 31,
                             "reset": 0,
-                            "sw_access": "rw"
+                            "sw_access": "rw",
+                            "hw_access": "r"
                         }
                     ]
                 }

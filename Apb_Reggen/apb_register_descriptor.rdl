@@ -6,7 +6,7 @@ addrmap apb_addr_map {
     regfile {
         reg data_t{
             desc = "Basic 32 bit data register with RW policy";
-            field {sw=rw; hw=r;} dt[31:0] = 0;
+            field {sw=rw; hw=r;} dt[31:0] = 0x0;
         };
         data_t data1 @ 0x0;
         data_t data2 @ 0x4;
@@ -14,15 +14,15 @@ addrmap apb_addr_map {
         
         reg wen_t{
             desc = "These bits enable and disable a write into the data register (0) disable (1) enabled";
-            field {sw=rw; hw=r;} data1_wren[0:0] = 0;
-            field {sw=rw; hw=r;} data2_wren[1:1] = 0;
-            field {sw=rw; hw=r;} data3_wren[2:2] = 0;
+            field {sw=w; hw=r;} data1_wren[0:0] = 0x0;
+            field {sw=w; hw=r;} data2_wren[1:1] = 0x0;
+            field {sw=w; hw=r;} data3_wren[2:2] = 0x0;
         };
         wen_t write_enable @ 0xC;
 
         reg status_t{
             desc = "These bits are used to store the result of a specific TRX to the data register if 1 an error occured";
-            field {sw=r; hw=w;} status[0:0] = 0;
+            field {sw=r; hw=w;} status[0:0] = 0x0;
         };
         status_t data_status_1 @ 0x10;
         status_t data_status_2 @ 0x14;
@@ -33,7 +33,7 @@ addrmap apb_addr_map {
     external mem {
         desc = "General RW single port ROM";
         reg {
-            field {sw=rw; hw=r;} dm[31:0] = 0;
+            field {sw=rw; hw=r;} dm[31:0] = 0x0;
         } r1[256] @ 0x0 += 4;
         mementries = 0x100;
     } apb_mem @ 0x100;

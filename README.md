@@ -18,7 +18,7 @@
 
 ### UVM Testbench Structure
 
-### PyUvm Testbench (better and easier then UVM)
+### PyUvm Testbench (better and easier then UVM?)
 
 ## Formal Protocol Verification
 

@@ -37,9 +37,9 @@
 #### import main packages
 ############################################################################
 import json as j
-import pandas as pd
 import sys
 import rif_template as rif
+import numpy as np
 from string import Template
 
 ############################################################################
@@ -50,58 +50,144 @@ regfile_type = "regfile"
 
 # Use to open the JSON file and get the dictionary back
 def parse_json() -> dict:
-    data = {}
+    address_map = {}
     with open("./output_all/apb_reg.json", "r") as f:
-        data = j.load(f)
+        address_map = j.load(f)
     f.close()
-    return data
+    return address_map
 
 def gen_rif(data):
-    name        = []
-    t_reg       = []
-    address     = []
-    sub_data    = data['children']
-    res         = {}
-    res2        = {}
-    global is_regfile 
-    for reg in sub_data:
+    ## Register list
+    sub_maps    = data['children']
+    ## Sub lists used to distunguish registers
+    reg_name    = []
+    out_name    = []
+    inp_name    = []
+    access_i    = []
+    access_o    = []
+    reset_p     = []
+    sw_rd_mask  = []
+    hw_rd_mask  = []
+    sw_wr_mask  = []
+    hw_wr_mask  = []
+    sw_rd_name  = []
+    sw_wr_name  = []
+    ## Start
+    for element in sub_maps:
         # Check the register aggregation type
-        if reg['type'] == regfile_type:
+        if element['type'] == regfile_type:
             is_regfile = True
         else: 
-            ## Rise the exeption TODO
             is_regfile = False
-        # according to the result we create the parameters
-        t_reg.append(reg['type'])
-        ## check if regfile is a type
+        ## if is a reg file type then we load all the registers in it
         if is_regfile:
-            address.append(reg['absolute_adress'])
-            name.append(reg['inst_name'])
-        else:
-            ## Rise the exeption TODO
-            pass
-        for x in reg['children']:
-            t_reg.append(x['type'])
-            name.append(x['inst_name'])
-            if (x['type'] != "field"):
-                address.append(x['address_offset'])
-    ## Generate the final dicationary
-    res2 = dict(zip(name, t_reg))
-    inp = Template(rif.hw_write_template_port+'\n')
-    out = Template(temp.hw_read_template_port+'\n')
+            for reg in element['children']:
+                ## loop through the registers to get the name
+                reg_name.append(reg['inst_name'])
+                ## loop through the registers to get the reset value
+                reset_p.append(reg['global_reset_value'])
+                ## loop through the registers to get the HW and SW masks
+                sw_rd_mask.append(reg['sw_read_mask'])
+                hw_rd_mask.append(reg['hw_read_mask'])
+                sw_wr_mask.append(reg['sw_write_mask'])
+                hw_wr_mask.append(reg['hw_write_mask'])
+                ## loop through the registers to get the direction
+                if reg['direction'] == "output":
+                    access_o.append(reg['direction'])
+                    out_name.append(reg['inst_name'])
+                else:
+                    access_i.append(reg['direction'])
+                    inp_name.append(reg['inst_name'])
+    ## Generate the final dicationaries
+    out_dict    = dict(zip(out_name, access_o))
+    inp_dict    = dict(zip(inp_name, access_i))
+    rest_dict   = dict(zip(reg_name, reset_p))
+    hwwr_dict   = dict(zip(reg_name, hw_wr_mask))
+    hwrd_dict   = dict(zip(reg_name, hw_rd_mask))
+    swwr_dict   = dict(zip(reg_name, sw_wr_mask))
+    swrd_dict   = dict(zip(reg_name, sw_rd_mask))
+    ## Step through the direction to get the module ports
     with open('./output_all/rif.sv', 'x') as f:
         ## Fristly write the header
         f.write(rif.header)
-        f.write(rif.sv_includsion)
+        f.write(rif.sv_inclusion)
         f.write(rif.module_name_param)
         f.write(rif.standard_rif_input_ports)
-        for x in res.keys():
-            if res2[x] == regfile_type:
-                rif_replace =inp.substitute({'input_port_hw_rw_access_name' : "{}_in".format(res2[x])})
-            else:
-                rif_replace =out.substitute({'output_port_hw_rw_access_name' : "{}_out".format(res2[x])})
+        f.write("\n  // Sets of input ports for HW write access")
+        inp = Template(rif.hw_write_template_port)
+        out = Template(rif.hw_read_template_port)
+        for name in inp_dict.keys():   
+            rif_replace = inp.substitute({'input_port_hw_rw_access_name' : "{}_in".format(name)})
+            f.write(rif_replace)
+        f.write("\n  // Sets of output ports for HW read access")
+        for name in out_dict.keys():
+            rif_replace = out.substitute({'output_port_hw_rw_access_name' : "{}_out".format(name)})
             f.write(rif_replace)
         f.write(rif.standard_rif_output_ports)
+        ## Step through the names of registers to dump the decoder signals
+        dec = Template(rif.set_of_decoder_flags)
+        f.write("\n    // Sets of DEC flags")
+        for name in reg_name:
+            rif_replace = dec.substitute({'dec_val' : "{}_dec".format(name)})
+            f.write(rif_replace)
+        ## Step through the register define the register variables inside the module
+        register = Template(rif.set_register)
+        f.write("\n")
+        f.write("\n    // DESC: Sets of registers Access Policy is RW or RO")
+        for name in reg_name:
+            rif_replace = register.substitute({'reg_rw' : "{}".format(name)})
+            f.write(rif_replace)
+        ## Dump internal standard not changable logic`
+        f.write(rif.internal_additional_signals)
+        f.write(rif.internal_decoder_signals_generation)
+        f.write(rif.internal_wr_rd_request)
+        f.write(rif.initialize_decoder_state)
+        dec = Template(rif.init_dec_access)
+        for name in reg_name:
+            rif_replace = dec.substitute({'dec_val' : "{}_dec".format(name)})
+            f.write(rif_replace)
+        f.write(rif.case_switch_over_address)
+        case = Template(rif.selection)
+        for name in reg_name:
+            rif_replace = case.substitute({'define_name' : "`register_{}".format(name) , 'dec_val' : "{}_dec".format(name)})
+            f.write(rif_replace)
+        f.write(rif.defualt_end_case)
+        f.write(rif.initialize_write_decoder_std)
+        f.write("\n        // Init only HW = R registers")
+        register = Template(rif.initialize_write_decoder_init_start)
+        for name in out_dict.keys():
+            rif_replace = register.substitute({'reg_name' : "{}".format(name), 'reset_val' : "'h{}".format(rest_dict[name].replace("0x",""))})
+            f.write(rif_replace)
+        f.write(rif.initialize_write_decoder_init_end)
+        register = Template(rif.register_write_decoder_start)
+        for name in reg_name:
+            rif_replace = register.substitute({'dec_val' : "{}_dec".format(name), 'reg_name' : "{}".format(name), 'sw_write_mask' : "{}".format(swwr_dict[name].replace("0x","'h"))})
+            f.write(rif_replace)
+        f.write(rif.register_write_decoder_end)
+        f.write(rif.errorr_handler_logic_start)
+        register = Template(rif.errorr_handler_logic)
+        for name in inp_dict.keys():
+            rif_replace = register.substitute({'dec_val' : "{}_dec".format(name), 'read_reg' : "{}".format(name), 'sw_read_mask': "{}".format(swrd_dict[name].replace("0x","'h"))})
+            f.write(rif_replace)
+        f.write(rif.errorr_handler_logic_end)
+        # f.write(rif.errorr_handler_write_logic_start)
+        # register = Template(rif.errorr_handler_write_logic)
+        # for name in out_dict.keys():
+        #     rif_replace = register.substitute({'dec_val' : "{}_dec".format(name), 'read_reg' : "{}".format(name)})
+        #     f.write(rif_replace)
+        # f.write(rif.errorr_handler_write_logic_end)
+        f.write(rif.internal_latest_assignement)
+        f.write("\n    // Assignements for HW = R policy")
+        register = Template(rif.assign_for_hw_read_policy_reg)
+        for name in out_dict.keys():
+            rif_replace = register.substitute({'out_port' : "{}_out".format(name), 'reg_name' : "{}".format(name), 'hw_read_mask' : "{}".format(hwrd_dict[name].replace("0x","'h"))})
+            f.write(rif_replace) 
+        f.write("\n\n    // Assignements for HW = W policy")
+        register = Template(rif.assign_for_hw_write_policy_reg)   
+        for name in inp_dict.keys():
+            rif_replace = register.substitute({'reg_name' : "{}".format(name),'in_port' : "{}_in".format(name), 'hw_write_mask' : "{}".format(hwwr_dict[name].replace("0x","'h"))})
+            f.write(rif_replace)  
+        f.write(rif.end_module_rif)     
     f.close()
 
 def main():
