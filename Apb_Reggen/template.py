@@ -74,7 +74,7 @@ header_python = """
 
 """
 ## Parameter and define template
-param_template = "parameter $name = $value;"
+param_template  = "parameter $name = $value;"
 define_template = "`define $name  $value"
 
 ## Constant template for Python

@@ -58,12 +58,17 @@ def parse_json() -> dict:
     return data
 
 def gen_lists_and_csv(data):
-    name    = []
-    t_reg   = []
-    address = []
-    sub_data = data['children']
-    res = {}
-    res2 = {}
+    name        = []
+    t_reg       = []
+    address     = []
+    sub_data    = data['children']
+    sw_rd_mask  = []
+    hw_rd_mask  = []
+    sw_wr_mask  = []
+    hw_wr_mask  = []
+    reset_p     = []
+    res         = {}
+    res2        = {}
     global is_regfile 
     global is_memory
     for reg in sub_data:
@@ -83,9 +88,17 @@ def gen_lists_and_csv(data):
         else:
             address.append(reg['absolute_adress'])
             name.append(reg['inst_name'])
+        ## Look Inside for children
         for x in reg['children']:
             t_reg.append(x['type'])
             name.append(x['inst_name'])
+            if ((not is_memory) & is_regfile):
+                ## Get the masks
+                sw_rd_mask.append(x['sw_read_mask'])
+                hw_rd_mask.append(x['hw_read_mask'])
+                sw_wr_mask.append(x['sw_write_mask'])
+                hw_wr_mask.append(x['hw_write_mask'])
+                reset_p.append(x['global_reset_value'])            
             if (x['type'] != "field"):
                 address.append(x['address_offset'])
         if ((not is_regfile) & is_memory):
@@ -93,8 +106,13 @@ def gen_lists_and_csv(data):
             name.append("memory_adress_end")
             address.append(reg['memory_adress_end'])
     ## Generate the final dicationary
-    res = dict(zip(name, address))
-    res2 = dict(zip(name, t_reg))
+    res         = dict(zip(name, address))
+    res2        = dict(zip(name, t_reg))
+    rest_dict   = dict(zip(name, reset_p))
+    hwwr_dict   = dict(zip(name, hw_wr_mask))
+    hwrd_dict   = dict(zip(name, hw_rd_mask))
+    swwr_dict   = dict(zip(name, sw_wr_mask))
+    swrd_dict   = dict(zip(name, sw_rd_mask))
     df = pd.DataFrame(data={"TYPE": t_reg, "NAME": name, "ADDRESS": address})
     with open ('./output_all/apb_reg.csv', 'x') as f:
         df.to_csv("./output_all/apb_reg.csv", sep=',',index=False)
@@ -105,18 +123,42 @@ def gen_lists_and_csv(data):
     with open('./output_all/apb_reg_param.svh', 'x') as f:
         ## Fristly write the header
         f.write(temp.header)
+        ## Start with Params
         for x in res.keys():
             if res2[x] == regfile_type:
                 a=t.substitute({'name' : "{}_{}".format(res2[x],x), 'value' : res[x].replace('0x',"32'h")})
-                b=d.substitute({'name' : "{}_{}".format(res2[x],x), 'value' : res[x].replace('0x',"32'h")})
             elif res2[x] == memory_type:
                 a=t.substitute({'name' : "{}".format(x), 'value' : res[x].replace('0x',"32'h")})
-                b=d.substitute({'name' : "{}".format(x), 'value' : res[x].replace('0x',"32'h")})
             else:
                 a=t.substitute({'name' : "register_{}".format(x), 'value' : res[x].replace('0x',"32'h")})
-                b=d.substitute({'name' : "register_{}".format(x), 'value' : res[x].replace('0x',"32'h")})
             f.write(a)
+        ## Start with Defines
+        for x in res.keys():
+            if res2[x] == regfile_type:
+                b=d.substitute({'name' : "{}_{}".format(res2[x],x), 'value' : res[x].replace('0x',"32'h")})
+            elif res2[x] == memory_type:
+                b=d.substitute({'name' : "{}".format(x), 'value' : res[x].replace('0x',"32'h")})
+            else:
+                b=d.substitute({'name' : "register_{}".format(x), 'value' : res[x].replace('0x',"32'h")})
             f.write(b)
+        ## Start for the Mask
+        for x in hwwr_dict.keys():
+            b=d.substitute({'name' : "mask_hwwr_{}".format(x), 'value' : hwwr_dict[x].replace('0x',"32'h")})
+            f.write(b)
+        for x in hwrd_dict.keys():
+            b=d.substitute({'name' : "mask_hwrd_{}".format(x), 'value' : hwrd_dict[x].replace('0x',"32'h")})
+            f.write(b)
+        for x in swwr_dict.keys():
+            b=d.substitute({'name' : "mask_swwr_{}".format(x), 'value' : swwr_dict[x].replace('0x',"32'h")})
+            f.write(b)
+        for x in swrd_dict.keys():
+            b=d.substitute({'name' : "mask_swrd_{}".format(x), 'value' : swrd_dict[x].replace('0x',"32'h")})
+            f.write(b)
+        ## Start for Resert
+        for x in rest_dict.keys():
+            b=d.substitute({'name' : "{}_POR_VALUE".format(x), 'value' : rest_dict[x].replace('0x',"32'h")})
+            f.write(b)     
+
     f.close()
     with open('./output_all/apb_reg_python_const.py', 'x') as f:
         ## Fristly write the header
@@ -129,6 +171,23 @@ def gen_lists_and_csv(data):
             else:
                 c=p.substitute({'name' : "register_{}".format(x), 'value' : res[x]})
             f.write(c)
+        ## Start for the Mask
+        for x in hwwr_dict.keys():
+            c=p.substitute({'name' : "mask_hwwr_{}".format(x), 'value' : hwwr_dict[x]})
+            f.write(c)
+        for x in hwrd_dict.keys():
+            c=p.substitute({'name' : "mask_hwrd_{}".format(x), 'value' : hwrd_dict[x]})
+            f.write(c)
+        for x in swwr_dict.keys():
+            c=p.substitute({'name' : "mask_swwr_{}".format(x), 'value' : swwr_dict[x]})
+            f.write(c)
+        for x in swrd_dict.keys():
+            c=p.substitute({'name' : "mask_swrd_{}".format(x), 'value' : swrd_dict[x]})
+            f.write(c)
+        ## Start for Resert
+        for x in rest_dict.keys():
+            c=p.substitute({'name' : "{}_POR_VALUE".format(x), 'value' : rest_dict[x]})
+            f.write(c)              
     f.close()
 
 def main():
