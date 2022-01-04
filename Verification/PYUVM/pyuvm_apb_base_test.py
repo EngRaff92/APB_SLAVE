@@ -51,6 +51,7 @@ import apb_reg_python_const as reg_const
 ## Main Test Class
 class apb_base_test(uvm_test):
     """ APB Main Base Test Class """
+    ## BUILD PHASE
     def build_phase(self):
         self.apb_environment    = env.apb_env.create("env", self)
         self.apb_first_seq      = seq.apb_sequence.create("apb_first_seq")
@@ -59,16 +60,24 @@ class apb_base_test(uvm_test):
         ## Set the do_not_print to true in order to not print the item fields
         self.apb_first_seq.do_not_print     = False  
 
+    ## RUN PHASE
     async def run_phase(self):
         self.raise_objection()
         for at in range(reg_const.memory_adress_start,reg_const.memory_adress_end,4):
-            self.apb_first_seq.apb_trx.address = at
-            self.apb_first_seq.apb_trx.cmd     = param_file.apb_cmd_t.WRITE
-            self.apb_first_seq.apb_trx.data_wr = at
+            ## Randomize the access to the WRITE to MEMORY only
+            with self.apb_first_seq.apb_trx.randomize_with():
+                self.apb_first_seq.apb_trx.address   == at
+                self.apb_first_seq.apb_trx.cmd       == param_file.apb_cmd_t.WRITE
+                self.apb_first_seq.apb_trx.data_wr   == at
+            ## Start the WRITE to Memory
             await self.apb_first_seq.start(self.apb_environment.apb_sequencer)
-            self.apb_first_seq.apb_trx.address = at
-            self.apb_first_seq.apb_trx.cmd     = param_file.apb_cmd_t.READ
+            ## Randomize the access to the READ to MEMORY only
+            with self.apb_first_seq.apb_trx.randomize_with():
+                self.apb_first_seq.apb_trx.address   == at
+                self.apb_first_seq.apb_trx.cmd       == param_file.apb_cmd_t.READ
+            ## Start the READ to Memory
             await self.apb_first_seq.start(self.apb_environment.apb_sequencer)
+            ## Get the data READ back
             if self.apb_first_seq.data_rd != at:
-                uvm_root().logger.error("Value read {} and written {} at address {} are different".format(hex(elf.apb_first_seq.data_rd),hex(at),hex(at)))
+                uvm_root().logger.error("Value read {} and written {} at address {} are different".format(hex(self.apb_first_seq.data_rd),hex(at),hex(at)))
         self.drop_objection()

@@ -45,6 +45,8 @@ TOPLEVEL 				:= apb_slave_controller
 TOPLEVEL_LANG			= verilog
 COCOTB_HDL_TIMEUNIT		= 1ns
 COCOTB_HDL_TIMEPRECISION= 1ns
+## cause all source information for all random classes to be captured
+VSC_CAPTURE_SRCINFO     = 1 
 include $(shell cocotb-config --makefiles)/Makefile.sim
 
 cleanall: clean

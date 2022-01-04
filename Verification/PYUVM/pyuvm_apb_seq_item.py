@@ -42,33 +42,37 @@ import random
 import cocotb
 import sys
 import pyuvm_apb_global_defines_params as param_file
+import vsc
+## Include the Autoreg output files the path insert works the same way as include works
+sys.path.insert(1,"/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Apb_Reggen/output_all")
+import apb_reg_python_const as reg_const
 
 ## Main Class
+@vsc.randobj
 class apb_seq_item(uvm_sequence_item):
     """ Apb Sequence Item """
     def __init__(self,name):
         super().__init__(name)
         self.item_name      = name
-        self.address        = 0
-        self.data_wr        = 0
-        self.access_part    = param_file.access_t
-        self.cmd            = param_file.apb_cmd_t
+        self.address        = vsc.rand_bit_t(32)
+        self.data_wr        = vsc.rand_bit_t(32)
+        self.access_part    = vsc.rand_enum_t(param_file.access_t)
+        self.cmd            = vsc.rand_enum_t(param_file.apb_cmd_t)
         self.resp           = param_file.apb_resp_t
+        self.exp_resp       = param_file.apb_resp_t
         self.data_rd        = 0
         self.do_not_print   = False
 
-    def randomize(self):
-        self.access_part    = random.choice(list(param_file.access_t))
-        self.cmd            = random.choice(list(param_file.apb_cmd_t))
-        self.address        = random.randint(0,10)
-        self.data_wr        = random.randint(0,10)
-        self.post_randomize()
+    @vsc.constraint
+    def address_limiter(self):
+        ## RIF access selected then we limit the address boundries
+        with vsc.if_then(self.access_part == param_file.access_t.RIF):
+            self.address.inside(vsc.rangelist(vsc.rng(reg_const.regfile_apb_rif, reg_const.register_data_status_3)))
+        ## MEM access selected then we limit the address boundries
+        with vsc.else_then():
+            self.address.inside(vsc.rangelist(vsc.rng(reg_const.memory_adress_start, reg_const.memory_adress_end)))
 
-    def post_randomize(self):
-        if self.do_not_print == False:
-            self.apb_item_print()
-
-
+    ##
     def apb_item_print(self):
         uvm_root().logger.info("Printing General APB Item Content")
         uvm_root().logger.info("Print TRX -> Name           : {}".format(self.item_name))
@@ -77,6 +81,7 @@ class apb_seq_item(uvm_sequence_item):
         uvm_root().logger.info("Print TRX -> Access Part    : {}".format(self.access_part.name))
         uvm_root().logger.info("Print TRX -> CMD type       : {}".format(self.cmd.name))
 
+    ##
     def apb_item_print_on_read(self):
         uvm_root().logger.info("Print TRX -> Read_data : {}".format(hex(self.data_rd)))
         if self.resp == param_file.apb_resp_t.APB_ERR:
@@ -84,6 +89,7 @@ class apb_seq_item(uvm_sequence_item):
         else:
             uvm_root().logger.info("Print TRX -> Response  : {}".format(self.resp.APB_OK.name))
 
+    ##        
     def do_copy(self):
         self._t             = apb_item("copied_item")
         self._t.address     = self.address  
