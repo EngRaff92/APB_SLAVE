@@ -13,7 +13,7 @@ addrmap apb_addr_map {
         data_t data3 @ 0x8;
         
         reg wen_t{
-            desc = "These bits enable and disable a write into the data register (0) disable (1) enabled";
+            desc = "This register enable and disable a write into the data register (0) disable (1) enabled";
             field {sw=w; hw=r;} data1_wren[0:0] = 0x0;
             field {sw=w; hw=r;} data2_wren[1:1] = 0x0;
             field {sw=w; hw=r;} data3_wren[2:2] = 0x0;
@@ -21,7 +21,7 @@ addrmap apb_addr_map {
         wen_t write_enable @ 0xC;
 
         reg status_t{
-            desc = "These bits are used to store the result of a specific TRX to the data register if 1 an error occured";
+            desc = "This register is used to store the result of a specific TRX to the data register if 1 an error occured";
             field {sw=r; hw=w;} status[0:0] = 0x0;
         };
         status_t data_status_1 @ 0x10;

@@ -1,0 +1,12 @@
+##
+class {{context["name"]}}(uvm_reg_block):
+  ''' Main Constructor use to add registers to this specific register map'''
+  def __init__(self, name):
+    super().__init__(name)
+    self.default_map = uvm_reg_map('default_map')
+    self.default_map.configure(self, {{ context["baseAddress"] }})
+    {% for reg in context["registers"] %}
+    self.{{reg["name"]}} = {{reg["name"]}}("{{reg["name"]}}")
+    self.{{reg["name"]}}.configure(self)
+    self.default_map.add_reg(self.{{reg["name"]}}, int("{{reg["addressOffset"]}}", 0))
+    {% endfor %}

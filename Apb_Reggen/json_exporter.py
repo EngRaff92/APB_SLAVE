@@ -55,24 +55,25 @@ def DecimalToBinary(num,out):
         pos = pos +1
 
 def convert_field(rdlc: RDLCompiler, obj: node.FieldNode) -> dict:
-    json_obj = dict()
-    json_obj['type'] = 'field'
-    json_obj['inst_name'] = obj.inst_name
-    json_obj['lsb'] = obj.lsb
-    json_obj['msb'] = obj.msb
-    json_obj['reset'] = obj.get_property('reset')
-    json_obj['sw_access'] = obj.get_property('sw').name
-    json_obj['hw_access'] = obj.get_property('hw').name
+    json_obj                = dict()
+    json_obj['type']        = 'field'
+    json_obj['inst_name']   = obj.inst_name
+    json_obj['lsb']         = obj.lsb
+    json_obj['msb']         = obj.msb
+    json_obj['reset']       = obj.get_property('reset')
+    json_obj['sw_access']   = obj.get_property('sw').name
+    json_obj['hw_access']   = obj.get_property('hw').name
     return json_obj
 
 
 def convert_reg(rdlc: RDLCompiler, obj: node.RegNode) -> dict:
     # Convert information about the register
-    json_obj = dict()
-    json_obj['type'] = 'reg'
-    json_obj['inst_name'] = obj.inst_name
-    json_obj['address_offset'] = hex(obj.raw_absolute_address)
+    json_obj                    = dict()
+    json_obj['type']            = 'reg'
+    json_obj['inst_name']       = obj.inst_name
+    json_obj['address_offset']  = hex(obj.raw_absolute_address)
     ## Check the direction according to the following tabel
+    #|---------------------------------------------|
     #| HAS_HW_READ |   HAS_HW_WRITE  | DIRECTION   |
     #|---------------------------------------------|
     #| FALSE       |   FALSE         | RuntimeError|  
@@ -95,6 +96,7 @@ def convert_reg(rdlc: RDLCompiler, obj: node.RegNode) -> dict:
     ## Get reset value and insert into the JSON object
     reset          = np.zeros(32,dtype=np.uint8)
     ## Get the write read SW mask according to this table
+    #|----------------------------------------------------------|
     #| HAS_HW_READ |   WRITE_MASK   | READ_MASK   | READ_MASK   |
     #|----------------------------------------------------------|
     #| FALSE       |   FALSE        | RuntimeError|             |
@@ -108,6 +110,7 @@ def convert_reg(rdlc: RDLCompiler, obj: node.RegNode) -> dict:
     sw_read_mask   = np.zeros(32,dtype=np.uint8)
     sw_write_mask  = np.zeros(32,dtype=np.uint8)
     ## Get the write read HW mask according to this table
+    #|----------------------------------------------------------|
     #| HAS_HW_READ |   WRITE_MASK   | READ_MASK   | READ_MASK   |
     #|----------------------------------------------------------|
     #| FALSE       |   FALSE        | RuntimeError|             |
@@ -143,11 +146,11 @@ def convert_reg(rdlc: RDLCompiler, obj: node.RegNode) -> dict:
 
 def convert_reg_in_memory(rdlc: RDLCompiler, obj: node.RegNode, absolute_adress, position) -> dict:
     # Convert information about the register
-    json_obj = dict()
-    json_obj['type'] = 'reg'
-    json_obj['inst_name'] = obj.inst_name + "_{}".format(position)
-    json_obj['address_offset'] = hex(absolute_adress + (position * obj.size))
-    json_obj['size'] = obj.total_size
+    json_obj                    = dict()
+    json_obj['type']            = 'reg'
+    json_obj['inst_name']       = obj.inst_name + "_{}".format(position)
+    json_obj['address_offset']  = hex(absolute_adress + (position * obj.size))
+    json_obj['size']            = obj.total_size
 
     # Iterate over all the fields in this reg and convert them
     json_obj['children'] = []

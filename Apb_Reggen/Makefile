@@ -55,8 +55,8 @@ check_and_remove:
 
 rdb_gen: clean test_variable
 	@if [ ! -d $(output_dir) ]; then mkdir -p $(output_dir); fi
-	@$(current_dir)/generate_uvm_regs.py $(rdl_file)
 	@$(current_dir)/json_exporter.py $(rdl_file)
+	@$(current_dir)/generate_uvm_regs.py $(rdl_file)
 	@$(current_dir)/generate_sv_parameters.py
 	@$(current_dir)/generate_rif.py
 	@$(current_dir)/generate_pyuvm_regs.py

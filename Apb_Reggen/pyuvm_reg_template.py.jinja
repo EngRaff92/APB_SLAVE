@@ -1,0 +1,10 @@
+## Desc
+class {{ context["name"]}}(uvm_reg):
+  ''' Main Constructor use to add fields to this specific reg'''
+  def __init__(self, name):
+    super().__init__(name)
+    {% for field in context["fields"] %}
+    self.{{ field["name"] }} = uvm_reg_field("{{ field["name"] }}")
+    self.{{ field["name"] }}.configure(self, {{ field["bitWidth"] }}, {{ field["bitOffset"] }}, "{{ field["access"] }}", 0, {{ field["reset"] }})
+    {% endfor %}
+
