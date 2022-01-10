@@ -52,7 +52,7 @@ memory_type  = "memory"
 # Use to open the JSON file and get the dictionary back
 def parse_json() -> dict:
     data = {}
-    with open("./output_all/apb_reg.json", "r") as f:
+    with open("./output_all/reg.json", "r") as f:
         data = j.load(f)
     f.close()
     return data
@@ -114,13 +114,13 @@ def gen_lists_and_csv(data):
     swwr_dict   = dict(zip(name, sw_wr_mask))
     swrd_dict   = dict(zip(name, sw_rd_mask))
     df = pd.DataFrame(data={"TYPE": t_reg, "NAME": name, "ADDRESS": address})
-    with open ('./output_all/apb_reg.csv', 'x') as f:
-        df.to_csv("./output_all/apb_reg.csv", sep=',',index=False)
+    with open ('./output_all/reg.csv', 'x') as f:
+        df.to_csv("./output_all/reg.csv", sep=',',index=False)
     f.close()
     t = Template(temp.param_template+'\n')
     d = Template(temp.define_template+'\n')
     p = Template(temp.python_const_template+'\n')
-    with open('./output_all/apb_reg_param.svh', 'x') as f:
+    with open('./output_all/reg_param.svh', 'x') as f:
         ## Fristly write the header
         f.write(temp.header)
         ## Start with Params
@@ -160,7 +160,7 @@ def gen_lists_and_csv(data):
             f.write(b)     
 
     f.close()
-    with open('./output_all/apb_reg_python_const.py', 'x') as f:
+    with open('./output_all/reg_python_const.py', 'x') as f:
         ## Fristly write the header
         f.write(temp.header_python)
         for x in res.keys():

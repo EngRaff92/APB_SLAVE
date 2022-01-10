@@ -59,7 +59,7 @@ class pyuvm_reg_generator(object):
 
     # Use to open the JSON file and get the dictionary back
     def parse_json(self):
-    	with open("./output_all/apb_reg.json", "r") as f:
+    	with open("./output_all/reg.json", "r") as f:
     		self.main_root = json.load(f)
     		f.close()
 

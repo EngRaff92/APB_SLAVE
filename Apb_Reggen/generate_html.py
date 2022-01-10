@@ -21,5 +21,5 @@ except RDLCompileError:
 html = HTMLExporter()
 html.export(
     root,
-    os.path.join("./output_all/apb_reg.html"),
+    os.path.join("./output_all/reg.html"),
 )

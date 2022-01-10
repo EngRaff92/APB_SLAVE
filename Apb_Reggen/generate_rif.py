@@ -77,7 +77,7 @@ regfile_type = "regfile"
 # Use to open the JSON file and get the dictionary back
 def parse_json() -> dict:
     address_map = {}
-    with open("./output_all/apb_reg.json", "r") as f:
+    with open("./output_all/reg.json", "r") as f:
         address_map = j.load(f)
     f.close()
     return address_map

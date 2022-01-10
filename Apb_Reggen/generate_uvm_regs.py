@@ -6,7 +6,7 @@ from peakrdl.uvm import UVMExporter
 
 def export_uvm(obj):
     exporter = UVMExporter()
-    exporter.export(root, "./output_all/apb_reg_pkg.sv")
+    exporter.export(root, "./output_all/reg_pkg.sv")
 
 if __name__ == "__main__":
     import sys
