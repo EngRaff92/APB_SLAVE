@@ -43,6 +43,7 @@ import cocotb
 import sys
 import pyuvm_apb_global_defines_params as param_file
 import pyuvm_apb_driver as driver
+import pyuvm_apb_scoreboard as scbd
 
 ## Main Class
 class apb_env(uvm_env):
@@ -51,6 +52,8 @@ class apb_env(uvm_env):
         ## Declaration of Main Components and Creation
         self.apb_sequencer  = uvm_sequencer.create("apb_sequencer", self)
         self.apb_driver     = driver.apb_driver.create("apb_driver", self)
+        self.apb_score      = scbd.apb_scoreboard.create("apb_score",self)
 
     def connect_phase(self):
         self.apb_driver.seq_item_port.connect(self.apb_sequencer.seq_item_export)
+        self.apb_driver.driver_to_scoreboard_ap.connect(self.apb_score.apb_fifo_export)

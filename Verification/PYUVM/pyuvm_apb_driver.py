@@ -38,22 +38,19 @@
 ## Import Files
 #######################################################################################
 from pyuvm import *
-import random
-import cocotb
-import sys
 import pyuvm_apb_global_defines_params as param_file
 
 ## Main Class
 class apb_driver(uvm_driver):
     """ Apb Driver """
     def build_phase(self):
-        self.driver_to_monitor_ap = uvm_analysis_port("driver_to_monitor_ap", self)
+        self.driver_to_monitor_ap       = uvm_analysis_port("driver_to_monitor_ap", self)
+        self.driver_to_scoreboard_ap    = uvm_analysis_port("driver_to_scoreboard_ap", self)
 
     def start_of_simulation_phase(self):
         self.apb_if = ConfigDB().get(self, "", "apb_if")
 
     async def wait_for_reset_done(self):
-        #await self.apb_if.wait_for_reset()
         await self.apb_if.apb_reset()
 
     async def run_phase(self):
@@ -70,4 +67,6 @@ class apb_driver(uvm_driver):
                     self.apb_trx.apb_item_print_on_read()
                 self.data_out = self.apb_trx.data_rd
             self.seq_item_port.item_done()
+            ## Send item (regardless from the command) to the scoreboard
+            self.driver_to_scoreboard_ap.write(self.apb_trx)
             self.drop_objection()

@@ -45,7 +45,7 @@ import pyuvm_apb_global_defines_params as param_file
 import vsc
 ## Include the Autoreg output files the path insert works the same way as include works
 sys.path.insert(1,"/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Apb_Reggen/output_all")
-import apb_reg_python_const as reg_const
+import reg_python_const as reg_const
 
 ## Main Class
 @vsc.randobj

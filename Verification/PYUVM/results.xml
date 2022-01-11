@@ -1,6 +1,6 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1641333191" />
-    <testcase name="apb_tb_top_entity" classname="tb_apb_top" file="/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Verification/PYUVM/tb_apb_top.py" lineno="141" time="1.8969919681549072" sim_time_ns="3075.0" ratio_time="1620.9873587345085" />
+    <property name="random_seed" value="1641932161" />
+    <testcase name="apb_tb_top_entity" classname="tb_apb_top" file="/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Verification/PYUVM/tb_apb_top.py" lineno="141" time="1.9011409282684326" sim_time_ns="3075.0" ratio_time="1617.4497925310163" />
   </testsuite>
 </testsuites>

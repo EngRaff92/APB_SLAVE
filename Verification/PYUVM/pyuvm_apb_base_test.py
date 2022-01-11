@@ -46,7 +46,7 @@ import pyuvm_apb_env as env
 import pyvum_apb_sequence as seq
 ## Include the Autoreg output files the path insert works the same way as include works
 sys.path.insert(1,"/Volumes/My_Data/MY_SYSTEMVERILOG_UVM_PROJECTS/APB_PROTOCOL/APB_SLAVE/Apb_Reggen/output_all")
-import apb_reg_python_const as reg_const
+import reg_python_const as reg_const
 
 ## Main Test Class
 class apb_base_test(uvm_test):
