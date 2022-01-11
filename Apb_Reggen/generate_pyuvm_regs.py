@@ -67,7 +67,7 @@ class pyuvm_reg_generator(object):
     	# Open file
     	f = open("./output_all/pyvum_register_model.py", "a")
     	# Fristly write the header
-    	f.write(template.header_python)
+    	f.write(template.header_imports_needed)
     	# Extract Information
     	mmap_context = {}
     	mmap_context["name"] = self.main_root["inst_name"]
